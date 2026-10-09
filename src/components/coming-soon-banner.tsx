@@ -98,6 +98,33 @@ export function ComingSoonSection() {
   const thumbnailRef = useRef<HTMLDivElement>(null);
   const xToRef = useRef<gsap.QuickToFunc | null>(null);
   const yToRef = useRef<gsap.QuickToFunc | null>(null);
+  const selectedPillarRef = useRef<number>(0);
+
+  const applyAtmosphere = (index: number) => {
+    setActivePillar(index);
+    const atmosphere = PILLAR_ATMOSPHERES[index];
+    const root = document.querySelector<HTMLElement>('.botanica-viewport-root');
+    if (root) {
+      gsap.to(root, {
+        background: atmosphere.bg,
+        duration: 0.6,
+        ease: 'power2.out',
+      });
+    }
+    if (cardRef.current) {
+      gsap.to(cardRef.current, {
+        backgroundColor: atmosphere.cardBg,
+        borderColor: atmosphere.border,
+        duration: 0.6,
+        ease: 'power2.out',
+      });
+    }
+  };
+
+  const handlePillarClick = (index: number) => {
+    selectedPillarRef.current = index;
+    applyAtmosphere(index);
+  };
 
   // 1. Apple-Grade Page Load Choreography & Botanical Flower Bloom Entrance
   useEffect(() => {
@@ -258,24 +285,8 @@ export function ComingSoonSection() {
         ease: 'power2.out',
         overwrite: 'auto',
       });
-      const defaultAtmosphere = PILLAR_ATMOSPHERES[0];
-      const root = document.querySelector<HTMLElement>('.botanica-viewport-root');
-      if (root) {
-        gsap.to(root, {
-          background: defaultAtmosphere.bg,
-          duration: 0.7,
-          ease: 'power2.out',
-        });
-      }
-      if (cardRef.current) {
-        gsap.to(cardRef.current, {
-          backgroundColor: defaultAtmosphere.cardBg,
-          borderColor: defaultAtmosphere.border,
-          duration: 0.7,
-          ease: 'power2.out',
-        });
-      }
-      setActivePillar(0);
+      const currentSelected = selectedPillarRef.current;
+      applyAtmosphere(currentSelected);
     };
 
     dock.addEventListener('mousemove', handleMouseMove);
@@ -288,24 +299,7 @@ export function ComingSoonSection() {
 
     items.forEach((item, index) => {
       const enter = () => {
-        setActivePillar(index);
-        const atmosphere = PILLAR_ATMOSPHERES[index];
-        const root = document.querySelector<HTMLElement>('.botanica-viewport-root');
-        if (root) {
-          gsap.to(root, {
-            background: atmosphere.bg,
-            duration: 0.6,
-            ease: 'power2.out',
-          });
-        }
-        if (cardRef.current) {
-          gsap.to(cardRef.current, {
-            backgroundColor: atmosphere.cardBg,
-            borderColor: atmosphere.border,
-            duration: 0.6,
-            ease: 'power2.out',
-          });
-        }
+        applyAtmosphere(index);
         gsap.to(thumb, {
           scale: 1,
           autoAlpha: 1,
@@ -468,11 +462,11 @@ export function ComingSoonSection() {
           {PILLARS.map((pillar, idx) => (
             <div
               key={pillar.id}
-              className="botanica-dock-item"
+              className={`botanica-dock-item ${activePillar === idx ? 'botanica-dock-item-active' : ''}`}
               role="button"
               tabIndex={0}
               aria-label={`${pillar.name}: ${pillar.label}`}
-              onClick={() => setWaitlistOpen(true)}
+              onClick={() => handlePillarClick(idx)}
             >
               <div className="botanica-dock-content">
                 <span className="botanica-dock-name">{pillar.name}</span>
@@ -646,7 +640,6 @@ export function ComingSoonSection() {
                     onChange={e => setEmail(e.target.value)}
                     className="botanica-modal-input"
                     aria-label="Early access email address"
-                    autoFocus
                   />
                 </div>
                 <button type="submit" disabled={isSubmitting} className="botanica-modal-submit">

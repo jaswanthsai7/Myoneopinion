@@ -77,7 +77,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { name: "theme-color", content: "#433728" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
       { title: "MyOneOpinion — One opinion. Forever." },
       { name: "description", content: "Everyone gets one opinion. Say it. Leave it. Forever." },
       { property: "og:title", content: "MyOneOpinion" },
@@ -107,11 +109,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ backgroundColor: '#433728' }}>
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body style={{ backgroundColor: '#433728' }}>
         {children}
         <Scripts />
       </body>
