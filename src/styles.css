@@ -935,7 +935,7 @@
 .botanica-viewport-root {
   min-height: 100dvh;
   width: 100%;
-  background: linear-gradient(145deg, #9b8f7e 0%, #877a6a 50%, #746858 100%);
+  background: linear-gradient(145deg, #6c5e4d 0%, #574a3a 50%, #433720 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
