@@ -935,12 +935,12 @@
 .botanica-viewport-root {
   min-height: 100dvh;
   width: 100%;
-  background: linear-gradient(145deg, #968776 0%, #827463 50%, #6e6050 100%);
+  background: linear-gradient(145deg, #9b8f7e 0%, #877a6a 50%, #746858 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px 16px;
+  padding: 32px 16px;
   box-sizing: border-box;
   transition: background 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -949,7 +949,7 @@
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
-  transform: translateY(-8px);
+  transform: translateY(-20px);
 }
 
 .botanica-page-wrapper {
@@ -961,13 +961,14 @@
 
 .botanica-card {
   width: 100%;
-  background: #c7b8a5;
+  background: #d3c7b5;
   border-radius: 32px;
-  border: 1px solid rgba(0, 0, 0, 0.16);
-  box-shadow: 0 40px 100px -20px rgba(40, 25, 12, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.22) inset;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  box-shadow: 0 40px 100px -20px rgba(40, 25, 12, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.25) inset;
   overflow: hidden;
   position: relative;
   transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: sepia(0.12) saturate(1.16) brightness(0.97) contrast(1.02);
 }
 
 .botanica-header {
@@ -1462,7 +1463,7 @@
   justify-content: center;
   gap: 16px;
   font-size: 12px;
-  color: rgba(245, 238, 228, 0.75);
+  color: rgba(26, 25, 24, 0.55);
   padding: 18px 0 8px;
   text-align: center;
 }

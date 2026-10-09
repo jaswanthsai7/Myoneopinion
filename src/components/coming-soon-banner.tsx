@@ -54,31 +54,31 @@ interface PillarAtmosphere {
 
 const PILLAR_ATMOSPHERES: PillarAtmosphere[] = [
   {
-    // The Philosophy (Golden Yellow Lilies & Warm Earthy Taupe Mid-Tone)
+    // The Philosophy (Golden Yellow Lilies & Warm Earthy Taupe Shade)
     name: 'philosophy',
-    bg: 'linear-gradient(145deg, #968776 0%, #827463 50%, #6e6050 100%)',
-    cardBg: '#c7b8a5',
-    border: 'rgba(0, 0, 0, 0.16)',
+    bg: 'linear-gradient(145deg, #9b8f7e 0%, #877a6a 50%, #746858 100%)',
+    cardBg: '#d3c7b5',
+    border: 'rgba(0, 0, 0, 0.14)',
   },
   {
     // The Discovery (Crimson & Dusty Rose Peonies & Romantic Rose Taupe)
     name: 'discovery',
-    bg: 'linear-gradient(145deg, #9f7d85 0%, #896970 50%, #74545b 100%)',
-    cardBg: '#cbb0b6',
+    bg: 'linear-gradient(145deg, #a7888e 0%, #927077 50%, #7d5b63 100%)',
+    cardBg: '#d5bfc4',
     border: 'rgba(225, 29, 72, 0.18)',
   },
   {
     // The Spotlight (Radiant Amber Orchids & Sunlit Amber Bronze)
     name: 'spotlight',
-    bg: 'linear-gradient(145deg, #a48b6e 0%, #91785c 50%, #7e654a 100%)',
-    cardBg: '#ceb292',
+    bg: 'linear-gradient(145deg, #af9779 0%, #9e8464 50%, #886f4f 100%)',
+    cardBg: '#d8c4a7',
     border: 'rgba(217, 119, 6, 0.2)',
   },
   {
     // Your Permanent Page (Pure White Calla Lilies & Ethereal Celadon Sage)
     name: 'permanent-page',
-    bg: 'linear-gradient(145deg, #849389 0%, #707f75 50%, #5d6b62 100%)',
-    cardBg: '#b9c7bc',
+    bg: 'linear-gradient(145deg, #8c9b90 0%, #77877c 50%, #627267 100%)',
+    cardBg: '#c3cec5',
     border: 'rgba(5, 150, 105, 0.2)',
   },
 ];
@@ -361,7 +361,7 @@ export function ComingSoonSection() {
         <header className="botanica-header">
           <div className="botanica-header-left" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <img src="/favicon-32x32.png" alt="" width={20} height={20} style={{ borderRadius: '5px', display: 'block' }} aria-hidden="true" />
-            <span className="botanica-tagline">MO</span>
+            <span className="botanica-tagline">opinion</span>
           </div>
 
           <div className="botanica-header-center">
