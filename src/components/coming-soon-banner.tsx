@@ -20,26 +20,26 @@ interface PillarItem {
 
 const PILLARS: PillarItem[] = [
   {
-    id: 'manifesto',
-    name: 'the manifesto',
-    label: '280 characters. Say it once. Yours forever.',
+    id: 'philosophy',
+    name: 'the philosophy',
+    label: '280 characters. Say it once. Keep it forever.',
     tag: 'Immutable Artifact',
   },
   {
-    id: 'resonance',
-    name: 'resonance engine',
+    id: 'discovery',
+    name: 'the discovery',
     label: 'Ranked purely by depth of human connection.',
     tag: 'Pure Connection',
   },
   {
-    id: 'boost',
-    name: 'boost economy',
+    id: 'spotlight',
+    name: 'the spotlight',
     label: 'Community lift for genuine perspectives.',
     tag: 'Empowerment',
   },
   {
-    id: 'canonical',
-    name: 'canonical link',
+    id: 'permanent-page',
+    name: 'your permanent page',
     label: 'Your permanent canonical web address.',
     tag: 'Digital Identity',
   },
@@ -54,29 +54,29 @@ interface PillarAtmosphere {
 
 const PILLAR_ATMOSPHERES: PillarAtmosphere[] = [
   {
-    // The Manifesto (Golden Yellow Lilies & Warm Champagne Sanctuary)
-    name: 'manifesto',
+    // The Philosophy (Golden Yellow Lilies & Warm Champagne Sanctuary)
+    name: 'philosophy',
     bg: 'linear-gradient(140deg, #ede4d7 0%, #ded1be 45%, #cbbea7 100%)',
     cardBg: '#dfcbb7',
     border: 'rgba(0, 0, 0, 0.14)',
   },
   {
-    // Resonance Engine (Crimson & Dusty Rose Peonies & Romantic Rose Quartz)
-    name: 'resonance',
+    // The Discovery (Crimson & Dusty Rose Peonies & Romantic Rose Quartz)
+    name: 'discovery',
     bg: 'linear-gradient(140deg, #f3e2e5 0%, #e8cad1 45%, #d5b0bc 100%)',
     cardBg: '#e5c9cf',
     border: 'rgba(225, 29, 72, 0.18)',
   },
   {
-    // Boost Economy (Radiant Amber Orchids & Sunlit Honey Amber)
-    name: 'boost',
+    // The Spotlight (Radiant Amber Orchids & Sunlit Honey Amber)
+    name: 'spotlight',
     bg: 'linear-gradient(140deg, #f5ebd7 0%, #eed8b8 45%, #dfbe94 100%)',
     cardBg: '#e2c9a2',
     border: 'rgba(217, 119, 6, 0.2)',
   },
   {
-    // Canonical Link (Pure White Calla Lilies & Ethereal Celadon Sage)
-    name: 'canonical',
+    // Your Permanent Page (Pure White Calla Lilies & Ethereal Celadon Sage)
+    name: 'permanent-page',
     bg: 'linear-gradient(140deg, #e4ece7 0%, #d1ded6 45%, #baccc1 100%)',
     cardBg: '#c7d8ce',
     border: 'rgba(5, 150, 105, 0.2)',
@@ -371,10 +371,12 @@ export function ComingSoonSection() {
             <button
               type="button"
               onClick={() => setWaitlistOpen(true)}
-              className="botanica-header-link"
+              className="botanica-waitlist-btn"
               aria-label="Open early access waitlist"
             >
-              access (0)
+               <Sparkles size={13} className="shrink-0 text-amber-300" />
+              <span className="botanica-btn-text">join</span>
+              <span className="botanica-btn-flowers" aria-hidden="true">✿ ❀ ❁</span>
             </button>
           </div>
         </header>
@@ -415,8 +417,8 @@ export function ComingSoonSection() {
           {/* Left Flanking Editorial Text */}
           <div className="botanica-flank botanica-flank-left">
             <p className="botanica-flank-title">
-              one opinion &amp;<br />
-              eternal artifact
+              One message.<br />
+              Yours forever.
             </p>
             <span className="botanica-flank-sub">280 characters · immutable</span>
           </div>
@@ -424,8 +426,8 @@ export function ComingSoonSection() {
           {/* Right Flanking Editorial Text */}
           <div className="botanica-flank botanica-flank-right">
             <p className="botanica-flank-title">
-              say it once,<br />
-              yours forever
+              Say it once.<br />
+              Keep it forever.
             </p>
             <span className="botanica-flank-sub">a quiet sanctuary · 2026</span>
           </div>
@@ -434,6 +436,17 @@ export function ComingSoonSection() {
           <div className="botanica-faded-bottom" aria-hidden="true">
             COMING SOON
           </div>
+        </div>
+
+        {/* Core Pillars Editorial Tagline */}
+        <div className="botanica-tagline-bar" aria-label="Site Pillars">
+          <span>The philosophy</span>
+          <span className="tagline-dot">·</span>
+          <span>The discovery</span>
+          <span className="tagline-dot">·</span>
+          <span>The spotlight</span>
+          <span className="tagline-dot">·</span>
+          <span>Your permanent page</span>
         </div>
 
         {/* 3. Bottom Interactive Split Dock with ObsidianUI Hover Triggers */}
@@ -458,18 +471,18 @@ export function ComingSoonSection() {
 
         {/* Floating Apple Liquid Glass Preview Card Window */}
         <div className="hover-img-thumbnail-wrapper" ref={thumbnailRef} aria-hidden="true">
-          {/* 1. Manifesto */}
+          {/* 1. Philosophy */}
           <div className="hover-img-thumbnail">
             <div className="hover-glass-card">
               <div className="hover-glass-top">
                 <span className="hover-glass-pill">
                   <span className="hover-glass-dot" />
-                  MANIFESTO
+                  THE PHILOSOPHY
                 </span>
                 <span className="hover-glass-meta">280 Characters · Immutable</span>
               </div>
               <p className="hover-glass-quote">
-                “Words that outlast the noise. One opinion. Chosen carefully. Forever.”
+                “Say it once. Keep it forever. One opinion. Chosen carefully.”
               </p>
               <div className="hover-glass-footer">
                 <div className="hover-glass-author">
@@ -484,13 +497,13 @@ export function ComingSoonSection() {
             </div>
           </div>
 
-          {/* 2. Resonance Engine */}
+          {/* 2. The Discovery */}
           <div className="hover-img-thumbnail">
             <div className="hover-glass-card">
               <div className="hover-glass-top">
                 <span className="hover-glass-pill">
                   <span className="hover-glass-dot" />
-                  RESONANCE ENGINE
+                  THE DISCOVERY
                 </span>
                 <span className="hover-glass-meta">Ranked by Human Depth</span>
               </div>
@@ -515,15 +528,15 @@ export function ComingSoonSection() {
             </div>
           </div>
 
-          {/* 3. Boost Economy */}
+          {/* 3. The Spotlight */}
           <div className="hover-img-thumbnail">
             <div className="hover-glass-card">
               <div className="hover-glass-top">
                 <span className="hover-glass-pill">
                   <span className="hover-glass-dot" />
-                  BOOST ECONOMY
+                  THE SPOTLIGHT
                 </span>
-                <span className="hover-glass-meta">100 Points per $1 Lift</span>
+                <span className="hover-glass-meta">Community Spotlight &amp; Lift</span>
               </div>
               <div className="hover-glass-stat-row">
                 <div className="hover-glass-stat-number">50,000</div>
@@ -545,13 +558,13 @@ export function ComingSoonSection() {
             </div>
           </div>
 
-          {/* 4. Canonical Link */}
+          {/* 4. Your Permanent Page */}
           <div className="hover-img-thumbnail">
             <div className="hover-glass-card">
               <div className="hover-glass-top">
                 <span className="hover-glass-pill">
                   <span className="hover-glass-dot" />
-                  CANONICAL IDENTITY
+                  YOUR PERMANENT PAGE
                 </span>
                 <span className="hover-glass-meta">One URL · Timeless Artifact</span>
               </div>
@@ -595,11 +608,11 @@ export function ComingSoonSection() {
             </div>
 
             <Dialog.Title className="botanica-modal-title">
-              Claim your canonical voice.
+              Reserve your permanent voice.
             </Dialog.Title>
 
             <Dialog.Description className="botanica-modal-desc">
-              Everyone gets one opinion. Reserve your canonical handle and immutable space before the public launch in 2026.
+              Everyone gets one opinion. Join our official Beehiiv waitlist to secure your canonical handle and permanent space before launch.
             </Dialog.Description>
 
             {subscribed ? (
@@ -620,8 +633,8 @@ export function ComingSoonSection() {
                     className="botanica-modal-input"
                     aria-label="Early access email address"
                     autoFocus
-                  />
-                </div>
+              />
+            </div>
                 <button type="submit" className="botanica-modal-submit">
                   <span>Request Invitation</span>
                   <ArrowRight size={14} />
