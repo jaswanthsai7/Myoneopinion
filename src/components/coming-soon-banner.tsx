@@ -363,7 +363,7 @@ export function ComingSoonSection() {
       <section className="botanica-card" ref={cardRef} aria-label="MyOneOpinion Editorial Coming Soon">
         {/* 1. Minimal Top Header Bar */}
         <header className="botanica-header">
-          <div className="botanica-header-left" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="botanica-header-left">
             <img src="/favicon-32x32.png" alt="" width={20} height={20} style={{ borderRadius: '5px', display: 'block' }} aria-hidden="true" />
             <span className="botanica-tagline">opinion</span>
           </div>
