@@ -626,13 +626,13 @@ export function ComingSoonSection() {
             </Dialog.Title>
 
             <Dialog.Description className="botanica-modal-desc">
-              Everyone gets one opinion. Join our official Beehiiv waitlist to secure your canonical handle and permanent space before launch.
+              Everyone gets one opinion. Join our official waitlist to secure your canonical handle and permanent space before launch.
             </Dialog.Description>
 
             {subscribed ? (
               <div className="botanica-modal-success">
                 <Check className="text-emerald-700 shrink-0" size={17} />
-                <span>You’re registered with our Beehiiv early access list. We’ll send your invitation upon launch!</span>
+                <span>You’re registered with our early access list. We’ll send your invitation upon launch!</span>
               </div>
             ) : (
               <form onSubmit={handleSubscribe} className="botanica-modal-form">
@@ -650,7 +650,7 @@ export function ComingSoonSection() {
                   />
                 </div>
                 <button type="submit" disabled={isSubmitting} className="botanica-modal-submit">
-                  <span>{isSubmitting ? 'Registering with Beehiiv...' : 'Request Invitation'}</span>
+                  <span>{isSubmitting ? 'Registering ...' : 'Request Invitation'}</span>
                   <ArrowRight size={14} />
                 </button>
               </form>
