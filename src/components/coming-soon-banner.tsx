@@ -5,17 +5,12 @@ import { ArrowRight, Check, Bell, X, Sparkles } from 'lucide-react';
 import { useVisitCount } from '@/hooks/use-visit-count';
 
 import botanicalLily from '@/assets/botanical-lily-transparent.png';
-import cardManifesto from '@/assets/card-manifesto.svg';
-import cardResonance from '@/assets/card-resonance.svg';
-import cardBoost from '@/assets/card-boost.svg';
-import cardLegacy from '@/assets/card-legacy.svg';
 
 interface PillarItem {
   id: string;
   name: string;
   label: string;
   tag: string;
-  imageSrc: string;
 }
 
 const PILLARS: PillarItem[] = [
@@ -24,28 +19,24 @@ const PILLARS: PillarItem[] = [
     name: 'the manifesto',
     label: '280 characters. Say it once. Yours forever.',
     tag: 'Immutable Artifact',
-    imageSrc: cardManifesto,
   },
   {
     id: 'resonance',
     name: 'resonance engine',
     label: 'Ranked purely by depth of human connection.',
     tag: 'Pure Connection',
-    imageSrc: cardResonance,
   },
   {
     id: 'boost',
     name: 'boost economy',
     label: 'Community lift for genuine perspectives.',
     tag: 'Empowerment',
-    imageSrc: cardBoost,
   },
   {
     id: 'canonical',
     name: 'canonical link',
     label: 'Your permanent canonical web address.',
     tag: 'Digital Identity',
-    imageSrc: cardLegacy,
   },
 ];
 
@@ -242,18 +233,118 @@ export function ComingSoonSection() {
           ))}
         </nav>
 
-        {/* Floating ObsidianUI Thumbnail Follower Window */}
+        {/* Floating Apple Liquid Glass Preview Card Window */}
         <div className="hover-img-thumbnail-wrapper" ref={thumbnailRef} aria-hidden="true">
-          {PILLARS.map((pillar, idx) => (
-            <div className="hover-img-thumbnail" key={idx}>
-              <img
-                src={pillar.imageSrc}
-                alt={pillar.name}
-                loading="lazy"
-                draggable={false}
-              />
+          {/* 1. Manifesto */}
+          <div className="hover-img-thumbnail">
+            <div className="hover-glass-card">
+              <div className="hover-glass-top">
+                <span className="hover-glass-pill">
+                  <span className="hover-glass-dot" />
+                  MANIFESTO
+                </span>
+                <span className="hover-glass-meta">280 Characters · Immutable</span>
+              </div>
+              <p className="hover-glass-quote">
+                “Words that outlast the noise. One opinion. Chosen carefully. Forever.”
+              </p>
+              <div className="hover-glass-footer">
+                <div className="hover-glass-author">
+                  <div className="hover-glass-avatar">M</div>
+                  <div>
+                    <div className="hover-glass-handle">@marcus</div>
+                    <div className="hover-glass-tag">Permanent Canonical Record</div>
+                  </div>
+                </div>
+                <span className="hover-glass-badge">Entry #01</span>
+              </div>
             </div>
-          ))}
+          </div>
+
+          {/* 2. Resonance Engine */}
+          <div className="hover-img-thumbnail">
+            <div className="hover-glass-card">
+              <div className="hover-glass-top">
+                <span className="hover-glass-pill">
+                  <span className="hover-glass-dot" />
+                  RESONANCE ENGINE
+                </span>
+                <span className="hover-glass-meta">Ranked by Human Depth</span>
+              </div>
+              <div className="hover-glass-list">
+                <div className="hover-glass-list-item">
+                  <span><strong>#1</strong> “Be curious, not judgmental.”</span>
+                  <span>♥ 1,429</span>
+                </div>
+                <div className="hover-glass-list-item">
+                  <span><strong>#2</strong> “Simplicity is the ultimate sophistication.”</span>
+                  <span>♥ 980</span>
+                </div>
+                <div className="hover-glass-list-item">
+                  <span><strong>#3</strong> “Stay hungry. Stay foolish.”</span>
+                  <span>♥ 854</span>
+                </div>
+              </div>
+              <div className="hover-glass-footer">
+                <span className="hover-glass-tag">Zero noise algorithms · Depth over virality</span>
+                <span className="hover-glass-badge">Top Ranked</span>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. Boost Economy */}
+          <div className="hover-img-thumbnail">
+            <div className="hover-glass-card">
+              <div className="hover-glass-top">
+                <span className="hover-glass-pill">
+                  <span className="hover-glass-dot" />
+                  BOOST ECONOMY
+                </span>
+                <span className="hover-glass-meta">100 Points per $1 Lift</span>
+              </div>
+              <div className="hover-glass-stat-row">
+                <div className="hover-glass-stat-number">50,000</div>
+                <div>
+                  <div className="hover-glass-handle">✦ Hype Points</div>
+                  <div className="hover-glass-stat-label">Community lift elevating honest voices</div>
+                </div>
+              </div>
+              <div className="hover-glass-chips">
+                <span className="hover-glass-chip">$5 Lift</span>
+                <span className="hover-glass-chip">$10 Lift</span>
+                <span className="hover-glass-chip">$25 Lift</span>
+                <span className="hover-glass-chip">Crown Tier</span>
+              </div>
+              <div className="hover-glass-footer">
+                <span className="hover-glass-tag">Empower perspectives that deserve permanence</span>
+                <span className="hover-glass-badge">Community Lift</span>
+              </div>
+            </div>
+          </div>
+
+          {/* 4. Canonical Link */}
+          <div className="hover-img-thumbnail">
+            <div className="hover-glass-card">
+              <div className="hover-glass-top">
+                <span className="hover-glass-pill">
+                  <span className="hover-glass-dot" />
+                  CANONICAL IDENTITY
+                </span>
+                <span className="hover-glass-meta">One URL · Timeless Artifact</span>
+              </div>
+              <div className="hover-glass-id-card">
+                <div className="hover-glass-id-url">myoneopinion.com/@you</div>
+                <div className="hover-glass-id-sub">
+                  <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: '#10b981' }} />
+                  <span>Reserved for Early Access Member</span>
+                </div>
+              </div>
+              <div className="hover-glass-footer">
+                <span className="hover-glass-tag">Your permanent canonical home on the web</span>
+                <span className="hover-glass-badge">Immutable Link</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
