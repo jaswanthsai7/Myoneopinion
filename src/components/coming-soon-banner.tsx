@@ -333,17 +333,24 @@ export function ComingSoonSection() {
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !email.includes('@')) return;
+    const cleanEmail = email.trim();
+    if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) return;
     setIsSubmitting(true);
     try {
+      // Store locally (matching Nadhebe subscriber persistence)
+      localStorage.setItem('nadhebe_subscriber_email', cleanEmail);
+      localStorage.setItem('myoneopinion_subscriber_email', cleanEmail);
       const waitlist = JSON.parse(localStorage.getItem('myoneopinion_waitlist') || '[]');
-      waitlist.push({ email, date: new Date().toISOString() });
+      waitlist.push({ email: cleanEmail, date: new Date().toISOString() });
       localStorage.setItem('myoneopinion_waitlist', JSON.stringify(waitlist));
 
       await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, publicationId: 'pub_25bdfab4-480d-422b-ade1-3e142e5da29c' }),
+        body: JSON.stringify({
+          email: cleanEmail,
+          publicationId: 'pub_bc10f598-8f5e-4fb8-be1b-71fa0959701b',
+        }),
       });
     } catch {
       // fallback handled gracefully

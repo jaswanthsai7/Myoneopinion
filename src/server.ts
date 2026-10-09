@@ -48,20 +48,36 @@ export default {
   async fetch(request: Request, env: any, ctx: unknown) {
     try {
       const url = new URL(request.url);
-      if (url.pathname === "/api/subscribe" && request.method === "POST") {
+      const isSubscribePath = ["/api/subscribe", "/api/v1/subscribe", "/subscribe"].includes(url.pathname);
+      if (isSubscribePath && request.method === "POST") {
         try {
-          const body = (await request.json()) as { email?: string; publicationId?: string };
-          const email = body.email;
-          const pubId = body.publicationId;
-          if (!email || !email.includes("@")) {
-            return new Response(JSON.stringify({ error: "Invalid email" }), {
-              status: 400,
-              headers: { "content-type": "application/json" },
-            });
+          const body = (await request.json().catch(() => ({}))) as { email?: string; publicationId?: string };
+          const { email } = body;
+          if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return new Response(
+              JSON.stringify({
+                success: false,
+                error: {
+                  code: "VALIDATION_FAILED",
+                  message: "Invalid email address format",
+                },
+              }),
+              { status: 400, headers: { "content-type": "application/json" } }
+            );
           }
 
-          const apiKey = env?.BEEHIIV_API_KEY || (typeof process !== "undefined" && process.env?.BEEHIIV_API_KEY);
-          if (apiKey) {
+          // Nadhebe publication ID as default, overridable by env or request body
+          const pubId =
+            body.publicationId ||
+            env?.PUBLIC_BEEHIIV_PUBLICATION_ID ||
+            (typeof process !== "undefined" && process.env?.PUBLIC_BEEHIIV_PUBLICATION_ID) ||
+            "pub_bc10f598-8f5e-4fb8-be1b-71fa0959701b";
+
+          const apiKey =
+            env?.BEEHIIV_API_KEY ||
+            (typeof process !== "undefined" && process.env?.BEEHIIV_API_KEY);
+
+          if (apiKey && apiKey !== "key_xxxxxxxxxxxxxxxxxxxxxxxxxxxx") {
             const beehiivRes = await fetch(
               `https://api.beehiiv.com/v2/publications/${pubId}/subscriptions`,
               {
@@ -77,25 +93,57 @@ export default {
                 }),
               }
             );
-            const beehiivData = await beehiivRes.json();
-            return new Response(JSON.stringify({ success: true, beehiiv: beehiivData }), {
-              headers: { "content-type": "application/json" },
-            });
+
+            const beehiivData: any = await beehiivRes.json().catch(() => ({}));
+            if (!beehiivRes.ok) {
+              const errMsg = beehiivData.errors?.[0]?.message || `Beehiiv API returned status ${beehiivRes.status}`;
+              return new Response(
+                JSON.stringify({
+                  success: false,
+                  error: { code: "SUBSCRIBE_FAILED", message: errMsg },
+                }),
+                { status: 400, headers: { "content-type": "application/json" } }
+              );
+            }
+
+            return new Response(
+              JSON.stringify({
+                success: true,
+                data: { subscription: beehiivData.data, publicationId: pubId },
+                meta: { timestamp: new Date().toISOString() },
+              }),
+              { status: 201, headers: { "content-type": "application/json" } }
+            );
           }
 
+          // Local / fallback registration queue
           return new Response(
             JSON.stringify({
               success: true,
-              registered: true,
-              message: "Subscribed to waitlist queue for publication " + pubId,
+              data: {
+                registered: true,
+                email,
+                publicationId: pubId,
+                status: "queued",
+              },
+              meta: {
+                message: `Registered email with waitlist for publication ${pubId}`,
+                timestamp: new Date().toISOString(),
+              },
             }),
-            { headers: { "content-type": "application/json" } }
+            { status: 200, headers: { "content-type": "application/json" } }
           );
         } catch (err: any) {
-          return new Response(JSON.stringify({ error: err?.message || "Failed to process subscription" }), {
-            status: 500,
-            headers: { "content-type": "application/json" },
-          });
+          return new Response(
+            JSON.stringify({
+              success: false,
+              error: {
+                code: "INTERNAL_SERVER_ERROR",
+                message: err?.message || "Failed to process subscription",
+              },
+            }),
+            { status: 500, headers: { "content-type": "application/json" } }
+          );
         }
       }
 
