@@ -74,16 +74,34 @@ function isValidEmail(email: unknown): boolean {
 let inMemoryVisits = 8;
 
 async function getStoredVisits(env: any): Promise<number> {
+  // 1. Try Cloudflare D1 SQLite Database (env.DB or env.D1)
+  const d1 = env?.DB || env?.D1;
+  if (d1?.prepare) {
+    try {
+      await d1.prepare("CREATE TABLE IF NOT EXISTS site_stats (key TEXT PRIMARY KEY, value INTEGER)").run();
+      const row = await d1.prepare("SELECT value FROM site_stats WHERE key = 'site_visits'").first();
+      if (row && typeof row.value === "number") {
+        inMemoryVisits = row.value;
+        return row.value;
+      }
+    } catch {}
+  }
+
+  // 2. Try Cloudflare KV (env.VISITS_KV)
   if (env?.VISITS_KV?.get) {
     try {
       const val = await env.VISITS_KV.get("site_visits");
       if (val) {
         const num = parseInt(val, 10);
-        if (!isNaN(num)) return num;
+        if (!isNaN(num)) {
+          inMemoryVisits = num;
+          return num;
+        }
       }
     } catch {}
   }
 
+  // 3. Try Node.js filesystem (visits.json)
   if (typeof process !== "undefined" && process?.cwd) {
     try {
       const fs = await import("node:fs/promises");
@@ -104,12 +122,23 @@ async function getStoredVisits(env: any): Promise<number> {
 async function setStoredVisits(env: any, count: number): Promise<void> {
   inMemoryVisits = count;
 
+  // 1. Cloudflare D1 SQLite Database (env.DB or env.D1)
+  const d1 = env?.DB || env?.D1;
+  if (d1?.prepare) {
+    try {
+      await d1.prepare("CREATE TABLE IF NOT EXISTS site_stats (key TEXT PRIMARY KEY, value INTEGER)").run();
+      await d1.prepare("INSERT INTO site_stats (key, value) VALUES ('site_visits', ?) ON CONFLICT(key) DO UPDATE SET value = ?").bind(count, count).run();
+    } catch {}
+  }
+
+  // 2. Cloudflare KV (env.VISITS_KV)
   if (env?.VISITS_KV?.put) {
     try {
       await env.VISITS_KV.put("site_visits", count.toString());
     } catch {}
   }
 
+  // 3. Node.js filesystem (visits.json)
   if (typeof process !== "undefined" && process?.cwd) {
     try {
       const fs = await import("node:fs/promises");
