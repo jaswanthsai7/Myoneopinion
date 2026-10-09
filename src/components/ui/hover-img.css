@@ -1,0 +1,197 @@
+.hover-img-container {
+  --hi-bg: transparent;
+  --hi-text: var(--foreground);
+  --hi-text-muted: var(--muted-foreground);
+  --hi-border: var(--border);
+
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+  padding: 1rem 0;
+}
+
+.hover-img-projects {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1240px;
+}
+
+.hover-img-project {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.75rem 1.5rem;
+  border-top: 1px solid var(--hi-border);
+  cursor: pointer;
+  transition: opacity 0.35s ease, background-color 0.25s ease;
+  background: transparent;
+  outline: none;
+  border-radius: 12px;
+}
+
+.hover-img-project:last-child {
+  border-bottom: 1px solid var(--hi-border);
+}
+
+.hover-img-title-group {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-img-index {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0.05em;
+  color: var(--hi-text-muted);
+  opacity: 0.6;
+}
+
+.hover-img-project h2 {
+  font-size: 2rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--hi-text);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.hover-img-pill {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  background: color-mix(in oklab, var(--boost) 15%, transparent);
+  color: var(--boost-foreground);
+  border: 1px solid color-mix(in oklab, var(--boost) 35%, transparent);
+}
+
+.hover-img-project p {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: var(--hi-text-muted);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  margin: 0;
+  text-align: right;
+  letter-spacing: -0.01em;
+}
+
+/* Hovered item effects */
+.hover-img-projects:hover .hover-img-project {
+  opacity: 0.35;
+}
+
+.hover-img-projects:hover .hover-img-project:hover,
+.hover-img-project:focus-visible {
+  opacity: 1 !important;
+  background-color: color-mix(in oklab, var(--foreground) 3%, transparent);
+}
+
+.hover-img-project:hover .hover-img-title-group,
+.hover-img-project:focus-visible .hover-img-title-group {
+  transform: translateX(10px);
+}
+
+.hover-img-project:hover p,
+.hover-img-project:focus-visible p {
+  transform: translateX(-10px);
+  color: var(--hi-text);
+}
+
+/* Floating Follower Thumbnail */
+.hover-img-thumbnail-wrapper {
+  position: fixed;
+  width: 440px;
+  height: 275px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  transform-origin: center center;
+  z-index: 100;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  background: #09090b;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -50%) scale(0);
+  will-change: transform, opacity;
+}
+
+.hover-img-thumbnail {
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+  background: #09090b;
+}
+
+.hover-img-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .hover-img-project {
+    padding: 1.5rem 1rem;
+  }
+  .hover-img-project h2 {
+    font-size: 1.625rem;
+  }
+  .hover-img-thumbnail-wrapper {
+    width: 360px;
+    height: 225px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hover-img-project {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 1.25rem 0.5rem;
+  }
+  .hover-img-project h2 {
+    font-size: 1.35rem;
+  }
+  .hover-img-project p {
+    text-align: left;
+    font-size: 0.8125rem;
+  }
+  .hover-img-thumbnail-wrapper {
+    display: none;
+  }
+  .hover-img-projects:hover .hover-img-project {
+    opacity: 1;
+  }
+  .hover-img-project:hover .hover-img-title-group {
+    transform: none;
+  }
+  .hover-img-project:hover p {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hover-img-title-group,
+  .hover-img-project p,
+  .hover-img-project {
+    transition: none !important;
+    transform: none !important;
+  }
+}

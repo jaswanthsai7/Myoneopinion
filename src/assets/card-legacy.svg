@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="legBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0b0e"/>
+      <stop offset="100%" stop-color="#15151c"/>
+    </linearGradient>
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="legPanel" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#legBg)"/>
+  <circle cx="400" cy="240" r="280" fill="#10b981" opacity="0.08" filter="blur(80px)"/>
+  
+  <rect x="70" y="60" width="660" height="380" rx="24" fill="url(#legPanel)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+  
+  <g transform="translate(110, 105)">
+    <rect width="130" height="28" rx="14" fill="rgba(16,185,129,0.12)" stroke="rgba(16,185,129,0.3)" stroke-width="1"/>
+    <circle cx="16" cy="14" r="4" fill="#34d399"/>
+    <text x="28" y="18" fill="#34d399" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', Inter, sans-serif" font-size="11" font-weight="600" letter-spacing="0.5">PERMANENT LINK</text>
+    <text x="500" y="18" text-anchor="end" fill="rgba(255,255,255,0.4)" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, sans-serif" font-size="12">One URL · Timeless Artifact</text>
+  </g>
+  
+  <!-- Apple Pass Card in Center -->
+  <g transform="translate(110, 165)">
+    <rect width="580" height="150" rx="20" fill="rgba(0,0,0,0.4)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+    
+    <g transform="translate(30, 30)">
+      <text x="0" y="18" fill="rgba(255,255,255,0.4)" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="600" letter-spacing="1">CANONICAL IDENTIFIER</text>
+      <text x="0" y="48" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', monospace" font-size="22" font-weight="600">myoneopinion.com/@you</text>
+      <text x="0" y="78" fill="#34d399" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12">● Ready to claim · Reserved for launch</text>
+    </g>
+    
+    <!-- QR / Barcode glyph -->
+    <g transform="translate(460, 25)">
+      <rect width="90" height="90" rx="12" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)"/>
+      <rect x="15" y="15" width="20" height="20" fill="#34d399"/>
+      <rect x="55" y="15" width="20" height="20" fill="#ffffff"/>
+      <rect x="15" y="55" width="20" height="20" fill="#ffffff"/>
+      <circle cx="65" cy="65" r="8" fill="#34d399"/>
+    </g>
+  </g>
+  
+  <g transform="translate(110, 355)">
+    <rect width="200" height="36" rx="18" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)"/>
+    <text x="100" y="23" text-anchor="middle" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="500">Copy Shareable Link</text>
+  </g>
+</svg>

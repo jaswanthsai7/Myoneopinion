@@ -1,15 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { ArrowRight, ArrowUp, Check, Crown, Heart, Link2, Plus, Search, Share2, UserRound, X, Feather, BarChart3, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { sampleMessages, type Message } from '@/lib/messages';
 import sunrise from '@/assets/myoneopinion-sunrise.jpg';
+import { ComingSoonSection } from '@/components/coming-soon-banner';
+import { useVisitCount } from '@/hooks/use-visit-count';
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
-    { title: 'MyOneOpinion — Everyone gets one opinion' },
-    { name: 'description', content: 'What’s the one opinion you want to leave behind? A place for words that matter. One opinion. Forever.' },
+    { title: 'MyOneOpinion — Everyone gets one opinion (Coming Soon)' },
+    { name: 'description', content: 'What’s the one opinion you want to leave behind? A place for words that matter. One opinion. Forever. Coming soon.' },
     { property: 'og:title', content: 'MyOneOpinion — Everyone gets one opinion' },
     { property: 'og:description', content: 'Say it. Leave it. Forever. Discover the opinions that connect us.' },
     { property: 'og:type', content: 'website' },
@@ -20,6 +22,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { visits, formattedVisits } = useVisitCount();
+  const [showFeed, setShowFeed] = useState(false);
   const [tab, setTab] = useState('Top');
   const [searchOpen, setSearchOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -30,10 +34,28 @@ function Index() {
   const [copied, setCopied] = useState<string | null>(null);
   const [amount, setAmount] = useState('5');
   const [notice, setNotice] = useState('');
+  const feedRef = useRef<HTMLElement>(null);
+
+  const toggleFeed = () => {
+    setShowFeed(prev => {
+      const next = !prev;
+      if (next) {
+        setTimeout(() => {
+          feedRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+      return next;
+    });
+  };
+
   useEffect(() => {
     const messageId = new URLSearchParams(window.location.search).get('message');
     const message = sampleMessages.find(item => item.id === messageId);
-    if (message) { setSelected(message); setModal('message'); }
+    if (message) {
+      setSelected(message);
+      setModal('message');
+      setShowFeed(true);
+    }
   }, []);
   const messages = useMemo(() => {
     const filtered = sampleMessages.filter(m => `${m.text} ${m.author}`.toLowerCase().includes(search.toLowerCase()));
@@ -52,51 +74,72 @@ function Index() {
   return (
     <div>
       <header className="site-header"><div className="header-inner">
-        <a href="/" className="wordmark" aria-label="MyOneOpinion home">MyOneOpinion<span className="text-boost">.</span></a>
-        {tabs()}
+        <div className="flex items-center gap-4">
+          <a href="/" className="wordmark" aria-label="MyOneOpinion home">MyOneOpinion<span className="text-boost">.</span></a>
+          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-3 py-1 text-xs">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="font-semibold text-foreground">{formattedVisits}</span>
+            <span className="text-muted-foreground text-[11px]">{visits === 1 ? 'visit' : 'visits'}</span>
+          </div>
+        </div>
+
+        {showFeed ? tabs() : null}
+
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" aria-label="Search messages" title="Search messages" onClick={() => setSearchOpen(!searchOpen)}><Search /></Button>
-          <Button variant="outline" size="sm" onClick={() => open('signin')}>Sign in</Button>
-          <Button className="header-post" size="sm" onClick={() => open('compose')}>Say Something <ArrowRight /></Button>
+          {showFeed ? (
+            <>
+              <Button variant="ghost" size="icon" aria-label="Search messages" title="Search messages" onClick={() => setSearchOpen(!searchOpen)}><Search /></Button>
+              <Button variant="outline" size="sm" onClick={() => open('signin')}>Sign in</Button>
+              <Button className="header-post" size="sm" onClick={() => open('compose')}>Say Something <ArrowRight /></Button>
+              <Button variant="ghost" size="sm" onClick={toggleFeed} className="text-xs text-muted-foreground">Hide Feed</Button>
+            </>
+          ) : (
+            <>
+              <Button variant="outline" size="sm" onClick={toggleFeed} className="rounded-full text-xs">Preview Feed Prototype</Button>
+            </>
+          )}
         </div>
       </div></header>
 
-      <section className="hero">
-        <img className="hero-image" src={sunrise} alt="A quiet moment on a mountain at sunrise" width={1920} height={640} />
-        <div className="hero-content"><h1>Everyone gets<br />one opinion.</h1>
-          <p className="hero-tagline">SAY IT. LEAVE IT. FOREVER.</p>
-          <Button className="hero-cta" onClick={() => open('compose')}><Plus /> Say Something <ArrowRight className="ml-3" /></Button>
-          <p className="mt-4 text-xs text-muted-foreground">One life. One opinion. <span className="text-foreground">Make it yours.</span></p>
-        </div>
-      </section>
+      {/* ObsidianUI Inspired Coming Soon Showcase with Hover-Img */}
+      <ComingSoonSection showFeed={showFeed} onToggleFeed={toggleFeed} />
 
-      <main className="content-layout"><section aria-label="Messages">
-        {tabs(true)}
-        <div className="feed-heading"><h2 className="eyebrow">{tab === 'Top' ? 'WORDS THAT RESONATE' : tab === 'New' ? 'JUST SAID' : 'MOST LOVED WORDS'}</h2><span className="text-[10px] text-muted-foreground">A glimpse of MyOneOpinion</span></div>
-        {searchOpen && <div className="flex items-start gap-2"><input autoFocus className="search-input" aria-label="Search words or authors" placeholder="Find a word, a feeling, a person…" value={search} onChange={e => setSearch(e.target.value)} /><Button variant="ghost" size="icon" aria-label="Close search" onClick={() => { setSearchOpen(false); setSearch(''); }}><X /></Button></div>}
-        <div className="message-list">
-          {messages.map((message, index) => <article key={message.id} className={`message-card ${tab === 'Top' && !search && index < 3 ? `medal-${['gold', 'silver', 'bronze'][index]}` : ''} ${index === 0 && tab === 'Top' && !search ? 'first' : ''}`}>
-            <div className="rank">{index === 0 && tab === 'Top' && !search && <Crown size={23} fill="currentColor" strokeWidth={1} />}<span>#{sampleMessages.indexOf(message) + 1}</span></div>
-            <div><Button variant="ghost" className="quote-link" onClick={() => open('message', message)}>“{message.text}”</Button><p className="byline">@{message.author}<span className="mx-2">·</span>{message.days} {message.days === 1 ? 'day' : 'days'} ago<span className="top-booster" title={`Sample top booster: @${message.topBooster}`}><span className="booster-avatar"><span className="booster-crown"><Crown size={9} fill="currentColor" strokeWidth={1.5} /></span>{message.topBooster.charAt(0).toUpperCase()}</span><span className="booster-name">@{message.topBooster}</span></span></p></div>
-            <div className="engagement-column"><Button variant="heart" className="vote-button" aria-label={`Love message by ${message.author}`} title="Sign in to love this message" onClick={() => { open('signin'); setNotice('Sign in to give these words a little love.'); }}><Heart fill="currentColor" />{message.votes.toLocaleString()}</Button><span className="hype-points" title="Sample Hype Points based on boosts"><Sparkles /><span><strong>{(message.boost * 100).toLocaleString()}</strong><small>Hype Points</small></span></span></div>
-            <div className="boost-column"><Button size="sm" variant={index === 0 && tab === 'Top' && !search ? 'gold' : 'outline'} onClick={() => open('boost', message)}><ArrowUp /> Boost</Button><small>${message.boost.toLocaleString()} boosted</small></div>
-            <Button variant="ghost" size="icon" className="share-button" aria-label={`Share message by ${message.author}`} title={copied === message.id ? 'Link copied' : 'Copy message link'} onClick={() => share(message)}>{copied === message.id ? <Check className="text-boost" /> : <Share2 />}</Button>
-          </article>)}
-          {messages.length === 0 && <p className="py-12 text-center text-sm text-muted-foreground">No words found. Try a different search.</p>}
-        </div>
-        <p className="mt-6 text-center text-[10px] text-muted-foreground">Sample messages & engagement · Every voice starts with one opinion.</p>
-      </section>
-      <aside className="sidebar">
-        <section className="side-section"><div className="flex items-center gap-2"><Feather size={18} className="text-boost" /><h2>Your words matter.</h2></div><div className="side-invitation">Some things deserve<br />to be said.</div><p>You only get one opinion.<br />Choose your words. Leave your mark.</p><Button className="mt-5 w-full" onClick={() => open('compose')}>Say Something <ArrowRight /></Button><p className="mt-3 text-center">One opinion. A little piece of you.</p></section>
-        <section className="side-section"><h2>How it works</h2>{[
-          { icon: UserRound, title: '1. Find your place', text: 'Create an account. Be yourself.' },
-          { icon: Feather, title: '2. Say your one opinion', text: '280 characters. Yours, forever.' },
-          { icon: Heart, title: '3. Let it resonate', text: 'People can love your message.' },
-          { icon: BarChart3, title: '4. Give it a little lift', text: 'Boost your words, if you want to.' },
-          { icon: Link2, title: '5. Take it with you', text: 'One permanent link to share.' },
-        ].map(step => <div className="how-step" key={step.title}><step.icon /><div><strong>{step.title}</strong><p>{step.text}</p></div></div>)}</section>
-        <section className="side-section"><div className="flex items-center gap-2"><Heart size={16} className="text-heart" /><h2>A little more human.</h2></div><p className="mt-3">No followers. No noise. No second take.<br />Just something you needed to say.</p></section>
-      </aside></main>
+      {/* Public Feed & Preview Layout (Hidden by default, shown when toggled) */}
+      {showFeed && (
+        <main className="content-layout" ref={feedRef}><section aria-label="Messages">
+          {tabs(true)}
+          <div className="feed-heading">
+            <h2 className="eyebrow">{tab === 'Top' ? 'WORDS THAT RESONATE' : tab === 'New' ? 'JUST SAID' : 'MOST LOVED WORDS'}</h2>
+            <span className="text-[10px] text-muted-foreground">Pre-Launch Sample Feed Preview</span>
+          </div>
+          {searchOpen && <div className="flex items-start gap-2"><input autoFocus className="search-input" aria-label="Search words or authors" placeholder="Find a word, a feeling, a person…" value={search} onChange={e => setSearch(e.target.value)} /><Button variant="ghost" size="icon" aria-label="Close search" onClick={() => { setSearchOpen(false); setSearch(''); }}><X /></Button></div>}
+          <div className="message-list">
+            {messages.map((message, index) => <article key={message.id} className={`message-card ${tab === 'Top' && !search && index < 3 ? `medal-${['gold', 'silver', 'bronze'][index]}` : ''} ${index === 0 && tab === 'Top' && !search ? 'first' : ''}`}>
+              <div className="rank">{index === 0 && tab === 'Top' && !search && <Crown size={23} fill="currentColor" strokeWidth={1} />}<span>#{sampleMessages.indexOf(message) + 1}</span></div>
+              <div><Button variant="ghost" className="quote-link" onClick={() => open('message', message)}>“{message.text}”</Button><p className="byline">@{message.author}<span className="mx-2">·</span>{message.days} {message.days === 1 ? 'day' : 'days'} ago<span className="top-booster" title={`Sample top booster: @${message.topBooster}`}><span className="booster-avatar"><span className="booster-crown"><Crown size={9} fill="currentColor" strokeWidth={1.5} /></span>{message.topBooster.charAt(0).toUpperCase()}</span><span className="booster-name">@{message.topBooster}</span></span></p></div>
+              <div className="engagement-column"><Button variant="heart" className="vote-button" aria-label={`Love message by ${message.author}`} title="Sign in to love this message" onClick={() => { open('signin'); setNotice('Sign in to give these words a little love.'); }}><Heart fill="currentColor" />{message.votes.toLocaleString()}</Button><span className="hype-points" title="Sample Hype Points based on boosts"><Sparkles /><span><strong>{(message.boost * 100).toLocaleString()}</strong><small>Hype Points</small></span></span></div>
+              <div className="boost-column"><Button size="sm" variant={index === 0 && tab === 'Top' && !search ? 'gold' : 'outline'} onClick={() => open('boost', message)}><ArrowUp /> Boost</Button><small>${message.boost.toLocaleString()} boosted</small></div>
+              <Button variant="ghost" size="icon" className="share-button" aria-label={`Share message by ${message.author}`} title={copied === message.id ? 'Link copied' : 'Copy message link'} onClick={() => share(message)}>{copied === message.id ? <Check className="text-boost" /> : <Share2 />}</Button>
+            </article>)}
+            {messages.length === 0 && <p className="py-12 text-center text-sm text-muted-foreground">No words found. Try a different search.</p>}
+          </div>
+          <p className="mt-6 text-center text-[10px] text-muted-foreground">Sample messages & engagement · Every voice starts with one opinion.</p>
+        </section>
+        <aside className="sidebar">
+          <section className="side-section"><div className="flex items-center gap-2"><Feather size={18} className="text-boost" /><h2>Your words matter.</h2></div><div className="side-invitation">Some things deserve<br />to be said.</div><p>You only get one opinion.<br />Choose your words. Leave your mark.</p><Button className="mt-5 w-full" onClick={() => open('compose')}>Say Something <ArrowRight /></Button><p className="mt-3 text-center">One opinion. A little piece of you.</p></section>
+          <section className="side-section"><h2>How it works</h2>{[
+            { icon: UserRound, title: '1. Find your place', text: 'Create an account. Be yourself.' },
+            { icon: Feather, title: '2. Say your one opinion', text: '280 characters. Yours, forever.' },
+            { icon: Heart, title: '3. Let it resonate', text: 'People can love your message.' },
+            { icon: BarChart3, title: '4. Give it a little lift', text: 'Boost your words, if you want to.' },
+            { icon: Link2, title: '5. Take it with you', text: 'One permanent link to share.' },
+          ].map(step => <div className="how-step" key={step.title}><step.icon /><div><strong>{step.title}</strong><p>{step.text}</p></div></div>)}</section>
+          <section className="side-section"><div className="flex items-center gap-2"><Heart size={16} className="text-heart" /><h2>A little more human.</h2></div><p className="mt-3">No followers. No noise. No second take.<br />Just something you needed to say.</p></section>
+        </aside></main>
+      )}
       <footer className="footer"><span className="font-display text-lg text-foreground">MyOneOpinion.</span><span>One opinion. Countless ways to feel less alone.</span><span>Made for the words that matter.</span></footer>
 
       <Dialog.Root open={modal !== null} onOpenChange={isOpen => { if (!isOpen) setModal(null); }}><Dialog.Portal><Dialog.Overlay className="modal-overlay" /><Dialog.Content className="modal-content">
