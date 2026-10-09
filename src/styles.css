@@ -1795,7 +1795,7 @@ button.botanica-header-link {
     justify-content: flex-start;
     height: auto;
     min-height: unset;
-    padding: 24px 16px 20px 16px;
+    padding: 24px 14px 18px 14px;
     position: relative;
     width: 100%;
     box-sizing: border-box;
@@ -1805,10 +1805,10 @@ button.botanica-header-link {
     top: auto;
     left: auto;
     transform: none;
-    font-size: clamp(26px, 8.2vw, 36px);
+    font-size: clamp(26px, 8.5vw, 36px);
     letter-spacing: 0.02em;
     text-align: center;
-    margin: 0 0 8px 0;
+    margin: 0 0 4px 0;
     padding: 0;
     line-height: 1.1;
     width: 100%;
@@ -1820,9 +1820,11 @@ button.botanica-header-link {
     bottom: auto;
     left: auto;
     transform: none;
-    width: min(290px, 78vw);
-    height: clamp(250px, 35vh, 320px);
-    margin: 6px auto 10px auto;
+    width: min(340px, 88vw);
+    height: clamp(320px, 44vh, 400px);
+    margin: 8px auto 6px auto;
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 76%, transparent 96%);
+    mask-image: linear-gradient(to bottom, black 0%, black 76%, transparent 96%);
   }
   .botanica-floral-img {
     position: absolute;
@@ -1837,12 +1839,12 @@ button.botanica-header-link {
     bottom: auto;
     left: auto;
     transform: none;
-    font-size: clamp(18px, 5.8vw, 24px);
-    letter-spacing: 0.15em;
+    font-size: clamp(20px, 6.2vw, 26px);
+    letter-spacing: 0.16em;
     text-align: center;
     margin: 4px 0 0 0;
     padding: 0;
-    opacity: 0.28;
+    opacity: 0.32;
     mask-image: none;
     -webkit-mask-image: none;
     width: 100%;
