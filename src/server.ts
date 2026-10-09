@@ -66,18 +66,30 @@ export default {
             );
           }
 
-          // Nadhebe publication ID as default, overridable by env or request body
+          // Read publication ID and API key strictly from environment
           const pubId =
-            body.publicationId ||
             env?.PUBLIC_BEEHIIV_PUBLICATION_ID ||
             (typeof process !== "undefined" && process.env?.PUBLIC_BEEHIIV_PUBLICATION_ID) ||
-            "pub_bc10f598-8f5e-4fb8-be1b-71fa0959701b";
+            body.publicationId;
 
           const apiKey =
             env?.BEEHIIV_API_KEY ||
             (typeof process !== "undefined" && process.env?.BEEHIIV_API_KEY);
 
-          if (apiKey && apiKey !== "key_xxxxxxxxxxxxxxxxxxxxxxxxxxxx") {
+          if (!pubId) {
+            return new Response(
+              JSON.stringify({
+                success: false,
+                error: {
+                  code: "CONFIG_MISSING",
+                  message: "PUBLIC_BEEHIIV_PUBLICATION_ID is not configured in the environment.",
+                },
+              }),
+              { status: 500, headers: { "content-type": "application/json" } }
+            );
+          }
+
+          if (apiKey) {
             const beehiivRes = await fetch(
               `https://api.beehiiv.com/v2/publications/${pubId}/subscriptions`,
               {
@@ -116,7 +128,7 @@ export default {
             );
           }
 
-          // Local / fallback registration queue
+          // Fallback queue when API key is not yet set
           return new Response(
             JSON.stringify({
               success: true,
@@ -127,7 +139,7 @@ export default {
                 status: "queued",
               },
               meta: {
-                message: `Registered email with waitlist for publication ${pubId}`,
+                message: "Email queued for early access waitlist.",
                 timestamp: new Date().toISOString(),
               },
             }),

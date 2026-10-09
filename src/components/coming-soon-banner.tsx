@@ -347,10 +347,7 @@ export function ComingSoonSection() {
       await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: cleanEmail,
-          publicationId: 'pub_bc10f598-8f5e-4fb8-be1b-71fa0959701b',
-        }),
+        body: JSON.stringify({ email: cleanEmail }),
       });
     } catch {
       // fallback handled gracefully
