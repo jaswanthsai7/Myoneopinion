@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "jaswanthsai7-myoneopinion",
-  "compatibility_date": "2026-10-10",
+  "name": "myoneopinion",
+  "compatibility_date": "2026-09-01",
   "compatibility_flags": [
     "nodejs_compat"
   ],
