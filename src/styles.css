@@ -1034,6 +1034,23 @@
   justify-content: center;
 }
 
+.botanica-ambient-aura {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -46%);
+  width: 720px;
+  height: 540px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(circle, rgba(223, 203, 183, 0.6) 0%, rgba(202, 168, 131, 0) 70%);
+  opacity: 0.9;
+  mix-blend-mode: multiply;
+  transition: opacity 0.5s ease;
+  filter: blur(25px);
+}
+
 .botanica-giant-title {
   font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
   font-size: clamp(34px, 11vw, 185px);
@@ -1058,11 +1075,11 @@
 
 .botanica-floral-container {
   position: absolute;
-  bottom: -7%;
+  bottom: -25%;
   left: 50%;
   transform: translateX(-50%);
   transform-origin: bottom center;
-  height: 126%;
+  height: 136%;
   z-index: 5;
   pointer-events: none;
   display: flex;
@@ -1208,20 +1225,20 @@
   pointer-events: none;
   top: 0;
   left: 0;
-  transform-origin: center center;
-  z-index: 9999;
+  transform-origin: center bottom;
+  z-index: 99999;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.52);
-  backdrop-filter: blur(40px) saturate(190%);
-  -webkit-backdrop-filter: blur(40px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: rgba(246, 240, 232, 0.94);
+  backdrop-filter: blur(48px) saturate(190%);
+  -webkit-backdrop-filter: blur(48px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   box-shadow: 
-    0 24px 60px -15px rgba(50, 30, 15, 0.18),
-    0 0 0 1px rgba(255, 255, 255, 0.4) inset,
+    0 28px 70px -15px rgba(45, 25, 10, 0.24),
+    0 0 0 1px rgba(255, 255, 255, 0.7) inset,
     0 1px 2px 0 rgba(255, 255, 255, 0.9) inset;
   opacity: 0;
   visibility: hidden;
-  transform: translate(-50%, -50%) scale(0);
+  transform: translate(-50%, -108%) scale(0);
   will-change: transform, opacity;
 }
 
@@ -1667,7 +1684,7 @@ button.botanica-header-link {
   }
   .botanica-floral-container {
     height: 112%;
-    bottom: -5%;
+    bottom: -11%;
   }
   .botanica-faded-bottom {
     font-size: clamp(18px, 6.5vw, 28px);

@@ -40,6 +40,34 @@ const PILLARS: PillarItem[] = [
   },
 ];
 
+interface PillarAtmosphere {
+  aura: string;
+  flowerFilter: string;
+}
+
+const PILLAR_ATMOSPHERES: PillarAtmosphere[] = [
+  {
+    // The Manifesto (Gold Sanctuary)
+    aura: 'radial-gradient(circle, rgba(223, 203, 183, 0.6) 0%, rgba(202, 168, 131, 0) 70%)',
+    flowerFilter: 'drop-shadow(0 20px 35px rgba(0, 0, 0, 0.08))',
+  },
+  {
+    // Resonance Engine (Deep Romantic Rose Blush)
+    aura: 'radial-gradient(circle, rgba(244, 63, 94, 0.45) 0%, rgba(225, 29, 72, 0) 70%)',
+    flowerFilter: 'drop-shadow(0 22px 40px rgba(225, 29, 72, 0.22)) brightness(1.04) saturate(1.08)',
+  },
+  {
+    // Boost Economy (Radiant Sunlit Amber Gold)
+    aura: 'radial-gradient(circle, rgba(245, 158, 11, 0.48) 0%, rgba(217, 119, 6, 0) 70%)',
+    flowerFilter: 'drop-shadow(0 22px 40px rgba(217, 119, 6, 0.22)) brightness(1.06) saturate(1.12)',
+  },
+  {
+    // Canonical Link (Pure Timeless Emerald Dawn)
+    aura: 'radial-gradient(circle, rgba(16, 185, 129, 0.42) 0%, rgba(5, 150, 105, 0) 70%)',
+    flowerFilter: 'drop-shadow(0 22px 40px rgba(5, 150, 105, 0.2)) brightness(1.03) contrast(1.03)',
+  },
+];
+
 export function ComingSoonSection() {
   const { visits, formattedVisits } = useVisitCount();
   const [email, setEmail] = useState('');
@@ -50,6 +78,7 @@ export function ComingSoonSection() {
   const cardRef = useRef<HTMLElement>(null);
   const heroStageRef = useRef<HTMLDivElement>(null);
   const flowerRef = useRef<HTMLDivElement>(null);
+  const auraRef = useRef<HTMLDivElement>(null);
   const dockRef = useRef<HTMLDivElement>(null);
   const thumbnailRef = useRef<HTMLDivElement>(null);
   const xToRef = useRef<gsap.QuickToFunc | null>(null);
@@ -189,7 +218,7 @@ export function ComingSoonSection() {
     gsap.set(thumb, {
       scale: 0,
       xPercent: -50,
-      yPercent: -50,
+      yPercent: -108,
       autoAlpha: 0,
     });
 
@@ -199,8 +228,11 @@ export function ComingSoonSection() {
     }
 
     const handleMouseMove = (e: MouseEvent) => {
-      xToRef.current?.(e.clientX);
-      yToRef.current?.(e.clientY);
+      const cardWidth = 440;
+      const margin = 20;
+      const clampedX = Math.max(cardWidth / 2 + margin, Math.min(window.innerWidth - cardWidth / 2 - margin, e.clientX));
+      xToRef.current?.(clampedX);
+      yToRef.current?.(e.clientY - 16);
     };
 
     const handleMouseLeave = () => {
@@ -211,6 +243,23 @@ export function ComingSoonSection() {
         ease: 'power2.out',
         overwrite: 'auto',
       });
+      if (auraRef.current) {
+        gsap.to(auraRef.current, {
+          background: PILLAR_ATMOSPHERES[0].aura,
+          duration: 0.6,
+          ease: 'power2.out',
+        });
+      }
+      if (flowerRef.current) {
+        const img = flowerRef.current.querySelector('img');
+        if (img) {
+          gsap.to(img, {
+            filter: PILLAR_ATMOSPHERES[0].flowerFilter,
+            duration: 0.6,
+            ease: 'power2.out',
+          });
+        }
+      }
     };
 
     dock.addEventListener('mousemove', handleMouseMove);
@@ -224,6 +273,24 @@ export function ComingSoonSection() {
     items.forEach((item, index) => {
       const enter = () => {
         setActivePillar(index);
+        const atmosphere = PILLAR_ATMOSPHERES[index];
+        if (auraRef.current) {
+          gsap.to(auraRef.current, {
+            background: atmosphere.aura,
+            duration: 0.5,
+            ease: 'power2.out',
+          });
+        }
+        if (flowerRef.current) {
+          const img = flowerRef.current.querySelector('img');
+          if (img) {
+            gsap.to(img, {
+              filter: atmosphere.flowerFilter,
+              duration: 0.5,
+              ease: 'power2.out',
+            });
+          }
+        }
         gsap.to(thumb, {
           scale: 1,
           autoAlpha: 1,
@@ -299,6 +366,9 @@ export function ComingSoonSection() {
 
         {/* 2. Center Stage with Overlapping Typography & Floral Centerpiece */}
         <div className="botanica-hero-stage" ref={heroStageRef}>
+          {/* Dynamic Ambient Atmosphere Glow responsive to hovered pillars */}
+          <div className="botanica-ambient-aura" ref={auraRef} aria-hidden="true" />
+
           {/* Top Giant Typography (Background Layer) */}
           <h1 className="botanica-giant-title" aria-label="MyOneOpinion">
             MYONEOPINION
