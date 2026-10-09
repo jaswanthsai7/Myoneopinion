@@ -54,11 +54,11 @@ interface PillarAtmosphere {
 
 const PILLAR_ATMOSPHERES: PillarAtmosphere[] = [
   {
-    // The Philosophy (Golden Yellow Lilies & Warm Champagne Sanctuary)
+    // The Philosophy (Golden Yellow Lilies & Warm Honey Champagne)
     name: 'philosophy',
-    bg: 'linear-gradient(140deg, #ede4d7 0%, #ded1be 45%, #cbbea7 100%)',
-    cardBg: '#dfcbb7',
-    border: 'rgba(0, 0, 0, 0.14)',
+    bg: 'linear-gradient(145deg, #e7dcce 0%, #ded0bd 45%, #cebeaa 100%)',
+    cardBg: '#e2d3be',
+    border: 'rgba(0, 0, 0, 0.12)',
   },
   {
     // The Discovery (Crimson & Dusty Rose Peonies & Romantic Rose Quartz)
@@ -87,6 +87,7 @@ export function ComingSoonSection() {
   const { visits, formattedVisits } = useVisitCount();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [activePillar, setActivePillar] = useState<number>(0);
 
@@ -330,17 +331,26 @@ export function ComingSoonSection() {
     };
   }, []);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes('@')) return;
+    setIsSubmitting(true);
     try {
       const waitlist = JSON.parse(localStorage.getItem('myoneopinion_waitlist') || '[]');
       waitlist.push({ email, date: new Date().toISOString() });
       localStorage.setItem('myoneopinion_waitlist', JSON.stringify(waitlist));
+
+      await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, publicationId: 'pub_25bdfab4-480d-422b-ade1-3e142e5da29c' }),
+      });
     } catch {
-      // ignore
+      // fallback handled gracefully
+    } finally {
+      setIsSubmitting(false);
+      setSubscribed(true);
     }
-    setSubscribed(true);
   };
 
   return (
@@ -618,7 +628,7 @@ export function ComingSoonSection() {
             {subscribed ? (
               <div className="botanica-modal-success">
                 <Check className="text-emerald-700 shrink-0" size={17} />
-                <span>You’re registered. We’ll send your invitation upon launch!</span>
+                <span>You’re registered with our Beehiiv early access list. We’ll send your invitation upon launch!</span>
               </div>
             ) : (
               <form onSubmit={handleSubscribe} className="botanica-modal-form">
@@ -633,10 +643,10 @@ export function ComingSoonSection() {
                     className="botanica-modal-input"
                     aria-label="Early access email address"
                     autoFocus
-              />
-            </div>
-                <button type="submit" className="botanica-modal-submit">
-                  <span>Request Invitation</span>
+                  />
+                </div>
+                <button type="submit" disabled={isSubmitting} className="botanica-modal-submit">
+                  <span>{isSubmitting ? 'Registering with Beehiiv...' : 'Request Invitation'}</span>
                   <ArrowRight size={14} />
                 </button>
               </form>

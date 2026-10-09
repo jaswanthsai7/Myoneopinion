@@ -935,7 +935,7 @@
 .botanica-viewport-root {
   min-height: 100dvh;
   width: 100%;
-  background: linear-gradient(140deg, #ede4d7 0%, #ded1be 45%, #cbbea7 100%);
+  background: linear-gradient(145deg, #e7dcce 0%, #ded0bd 45%, #cebeaa 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -948,7 +948,8 @@
 .botanica-main-container {
   width: 100%;
   max-width: 1440px;
-  margin: auto;
+  margin: 0 auto;
+  transform: translateY(-8px);
 }
 
 .botanica-page-wrapper {
@@ -960,9 +961,9 @@
 
 .botanica-card {
   width: 100%;
-  background: #dfcbb7;
+  background: #e2d3be;
   border-radius: 32px;
-  border: 1px solid rgba(0, 0, 0, 0.14);
+  border: 1px solid rgba(0, 0, 0, 0.12);
   box-shadow: 0 40px 100px -20px rgba(50, 30, 15, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
   overflow: hidden;
   position: relative;
@@ -1042,7 +1043,7 @@
 .botanica-hero-stage {
   position: relative;
   width: 100%;
-  height: clamp(480px, 70vh, 660px);
+  height: clamp(480px, 64vh, 600px);
   overflow: hidden;
   display: flex;
   align-items: center;

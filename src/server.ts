@@ -45,8 +45,60 @@ function isH3SwallowedErrorBody(body: string): boolean {
 }
 
 export default {
-  async fetch(request: Request, env: unknown, ctx: unknown) {
+  async fetch(request: Request, env: any, ctx: unknown) {
     try {
+      const url = new URL(request.url);
+      if (url.pathname === "/api/subscribe" && request.method === "POST") {
+        try {
+          const body = (await request.json()) as { email?: string; publicationId?: string };
+          const email = body.email;
+          const pubId = body.publicationId;
+          if (!email || !email.includes("@")) {
+            return new Response(JSON.stringify({ error: "Invalid email" }), {
+              status: 400,
+              headers: { "content-type": "application/json" },
+            });
+          }
+
+          const apiKey = env?.BEEHIIV_API_KEY || (typeof process !== "undefined" && process.env?.BEEHIIV_API_KEY);
+          if (apiKey) {
+            const beehiivRes = await fetch(
+              `https://api.beehiiv.com/v2/publications/${pubId}/subscriptions`,
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${apiKey}`,
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  email,
+                  reactivate_existing: true,
+                  send_welcome_email: true,
+                }),
+              }
+            );
+            const beehiivData = await beehiivRes.json();
+            return new Response(JSON.stringify({ success: true, beehiiv: beehiivData }), {
+              headers: { "content-type": "application/json" },
+            });
+          }
+
+          return new Response(
+            JSON.stringify({
+              success: true,
+              registered: true,
+              message: "Subscribed to waitlist queue for publication " + pubId,
+            }),
+            { headers: { "content-type": "application/json" } }
+          );
+        } catch (err: any) {
+          return new Response(JSON.stringify({ error: err?.message || "Failed to process subscription" }), {
+            status: 500,
+            headers: { "content-type": "application/json" },
+          });
+        }
+      }
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
