@@ -54,31 +54,31 @@ interface PillarAtmosphere {
 
 const PILLAR_ATMOSPHERES: PillarAtmosphere[] = [
   {
-    // The Philosophy (Golden Yellow Lilies & Warm Honey Champagne)
+    // The Philosophy (Golden Yellow Lilies & Warm Earthy Taupe Mid-Tone)
     name: 'philosophy',
-    bg: 'linear-gradient(145deg, #e7dcce 0%, #ded0bd 45%, #cebeaa 100%)',
-    cardBg: '#e2d3be',
-    border: 'rgba(0, 0, 0, 0.12)',
+    bg: 'linear-gradient(145deg, #968776 0%, #827463 50%, #6e6050 100%)',
+    cardBg: '#c7b8a5',
+    border: 'rgba(0, 0, 0, 0.16)',
   },
   {
-    // The Discovery (Crimson & Dusty Rose Peonies & Romantic Rose Quartz)
+    // The Discovery (Crimson & Dusty Rose Peonies & Romantic Rose Taupe)
     name: 'discovery',
-    bg: 'linear-gradient(140deg, #f3e2e5 0%, #e8cad1 45%, #d5b0bc 100%)',
-    cardBg: '#e5c9cf',
+    bg: 'linear-gradient(145deg, #9f7d85 0%, #896970 50%, #74545b 100%)',
+    cardBg: '#cbb0b6',
     border: 'rgba(225, 29, 72, 0.18)',
   },
   {
-    // The Spotlight (Radiant Amber Orchids & Sunlit Honey Amber)
+    // The Spotlight (Radiant Amber Orchids & Sunlit Amber Bronze)
     name: 'spotlight',
-    bg: 'linear-gradient(140deg, #f5ebd7 0%, #eed8b8 45%, #dfbe94 100%)',
-    cardBg: '#e2c9a2',
+    bg: 'linear-gradient(145deg, #a48b6e 0%, #91785c 50%, #7e654a 100%)',
+    cardBg: '#ceb292',
     border: 'rgba(217, 119, 6, 0.2)',
   },
   {
     // Your Permanent Page (Pure White Calla Lilies & Ethereal Celadon Sage)
     name: 'permanent-page',
-    bg: 'linear-gradient(140deg, #e4ece7 0%, #d1ded6 45%, #baccc1 100%)',
-    cardBg: '#c7d8ce',
+    bg: 'linear-gradient(145deg, #849389 0%, #707f75 50%, #5d6b62 100%)',
+    cardBg: '#b9c7bc',
     border: 'rgba(5, 150, 105, 0.2)',
   },
 ];
@@ -361,7 +361,7 @@ export function ComingSoonSection() {
         <header className="botanica-header">
           <div className="botanica-header-left" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <img src="/favicon-32x32.png" alt="" width={20} height={20} style={{ borderRadius: '5px', display: 'block' }} aria-hidden="true" />
-            <span className="botanica-tagline">sanctuary</span>
+            <span className="botanica-tagline">MO</span>
           </div>
 
           <div className="botanica-header-center">
