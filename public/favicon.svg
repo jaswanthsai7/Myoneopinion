@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient: Deep Obsidian Luxury -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#242220"/>
+      <stop offset="50%" stop-color="#161514"/>
+      <stop offset="100%" stop-color="#0d0c0c"/>
+    </linearGradient>
+
+    <!-- Warm Champagne Gold Gradient for Glyph -->
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="35%" stop-color="#f5ede3"/>
+      <stop offset="75%" stop-color="#dfcbb7"/>
+      <stop offset="100%" stop-color="#caa883"/>
+    </linearGradient>
+
+    <!-- Accent Warm Amber -->
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e9caa5"/>
+      <stop offset="100%" stop-color="#caa883"/>
+    </linearGradient>
+
+    <!-- Inner Soft Radiance -->
+    <radialGradient id="halo" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#dfcbb7" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#dfcbb7" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Apple Squircle Outer Frame (r = 115 on 512) -->
+  <rect x="20" y="20" width="472" height="472" rx="112" fill="url(#bg)" stroke="rgba(255,255,255,0.14)" stroke-width="6"/>
+  <rect x="26" y="26" width="460" height="460" rx="106" fill="none" stroke="rgba(223,203,183,0.18)" stroke-width="2"/>
+
+  <!-- Subtle Ambient Glow -->
+  <rect x="26" y="26" width="460" height="460" rx="106" fill="url(#halo)"/>
+
+  <!-- Outer Sanctuary Circle (The "O" for Opinion / Eternity) -->
+  <circle cx="256" cy="256" r="156" fill="none" stroke="url(#accent)" stroke-width="8" opacity="0.32" stroke-dasharray="10 8"/>
+  <circle cx="256" cy="256" r="142" fill="none" stroke="url(#gold)" stroke-width="6" opacity="0.85"/>
+
+  <!-- Top Accent Dot (Sanctuary / Voice Beacon) -->
+  <circle cx="256" cy="98" r="7" fill="url(#accent)"/>
+
+  <!-- The Iconic Editorial "1" (One Opinion) -->
+  <!-- Serif Roman Numeral 1 with sculpted proportions -->
+  <g fill="url(#gold)">
+    <!-- Main Vertical Column -->
+    <rect x="238" y="180" width="36" height="166" rx="4"/>
+    
+    <!-- Top Serif / Quotation Flag -->
+    <path d="M 238 214 L 238 184 C 238 182, 218 190, 196 206 C 190 210, 186 216, 186 220 L 198 232 C 206 222, 222 216, 238 214 Z"/>
+    
+    <!-- Bottom Serif Base -->
+    <path d="M 194 342 L 318 342 C 322 342, 324 345, 324 349 L 324 354 C 324 358, 322 360, 318 360 L 194 360 C 190 360, 188 358, 188 354 L 188 349 C 188 345, 190 342, 194 342 Z"/>
+
+    <!-- Subtle Editorial Serifs at top column -->
+    <path d="M 270 180 L 278 180 C 282 180, 284 182, 284 186 L 284 192 L 274 192 Z"/>
+  </g>
+
+  <!-- Left and Right Subtle Quotation Marks (Signifying Voice & Opinion) -->
+  <g fill="url(#gold)" opacity="0.45">
+    <!-- Left Quote Mark -->
+    <circle cx="150" cy="246" r="8"/>
+    <path d="M 158 246 C 158 258, 150 268, 142 274 L 140 268 C 146 264, 150 256, 150 248 L 158 248 Z"/>
+    
+    <!-- Right Quote Mark -->
+    <circle cx="362" cy="246" r="8"/>
+    <path d="M 370 246 C 370 258, 362 268, 354 274 L 352 268 C 358 264, 362 256, 362 248 L 370 248 Z"/>
+  </g>
+</svg>
