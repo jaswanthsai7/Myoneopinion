@@ -4,7 +4,12 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { ArrowRight, Check, Bell, X, Sparkles } from 'lucide-react';
 import { useVisitCount } from '@/hooks/use-visit-count';
 
-import botanicalLily from '@/assets/botanical-lily-transparent.png';
+import flowerManifesto from '@/assets/flower-manifesto.png';
+import flowerResonance from '@/assets/flower-resonance.png';
+import flowerBoost from '@/assets/flower-boost.png';
+import flowerCanonical from '@/assets/flower-canonical.png';
+
+const FLOWERS = [flowerManifesto, flowerResonance, flowerBoost, flowerCanonical];
 
 interface PillarItem {
   id: string;
@@ -41,30 +46,40 @@ const PILLARS: PillarItem[] = [
 ];
 
 interface PillarAtmosphere {
-  aura: string;
-  flowerFilter: string;
+  name: string;
+  bg: string;
+  cardBg: string;
+  border: string;
 }
 
 const PILLAR_ATMOSPHERES: PillarAtmosphere[] = [
   {
-    // The Manifesto (Gold Sanctuary)
-    aura: 'radial-gradient(circle, rgba(223, 203, 183, 0.6) 0%, rgba(202, 168, 131, 0) 70%)',
-    flowerFilter: 'drop-shadow(0 20px 35px rgba(0, 0, 0, 0.08))',
+    // The Manifesto (Golden Yellow Lilies & Warm Champagne Sanctuary)
+    name: 'manifesto',
+    bg: 'linear-gradient(140deg, #ede4d7 0%, #ded1be 45%, #cbbea7 100%)',
+    cardBg: '#dfcbb7',
+    border: 'rgba(0, 0, 0, 0.14)',
   },
   {
-    // Resonance Engine (Deep Romantic Rose Blush)
-    aura: 'radial-gradient(circle, rgba(244, 63, 94, 0.45) 0%, rgba(225, 29, 72, 0) 70%)',
-    flowerFilter: 'drop-shadow(0 22px 40px rgba(225, 29, 72, 0.22)) brightness(1.04) saturate(1.08)',
+    // Resonance Engine (Crimson & Dusty Rose Peonies & Romantic Rose Quartz)
+    name: 'resonance',
+    bg: 'linear-gradient(140deg, #f3e2e5 0%, #e8cad1 45%, #d5b0bc 100%)',
+    cardBg: '#e5c9cf',
+    border: 'rgba(225, 29, 72, 0.18)',
   },
   {
-    // Boost Economy (Radiant Sunlit Amber Gold)
-    aura: 'radial-gradient(circle, rgba(245, 158, 11, 0.48) 0%, rgba(217, 119, 6, 0) 70%)',
-    flowerFilter: 'drop-shadow(0 22px 40px rgba(217, 119, 6, 0.22)) brightness(1.06) saturate(1.12)',
+    // Boost Economy (Radiant Amber Orchids & Sunlit Honey Amber)
+    name: 'boost',
+    bg: 'linear-gradient(140deg, #f5ebd7 0%, #eed8b8 45%, #dfbe94 100%)',
+    cardBg: '#e2c9a2',
+    border: 'rgba(217, 119, 6, 0.2)',
   },
   {
-    // Canonical Link (Pure Timeless Emerald Dawn)
-    aura: 'radial-gradient(circle, rgba(16, 185, 129, 0.42) 0%, rgba(5, 150, 105, 0) 70%)',
-    flowerFilter: 'drop-shadow(0 22px 40px rgba(5, 150, 105, 0.2)) brightness(1.03) contrast(1.03)',
+    // Canonical Link (Pure White Calla Lilies & Ethereal Celadon Sage)
+    name: 'canonical',
+    bg: 'linear-gradient(140deg, #e4ece7 0%, #d1ded6 45%, #baccc1 100%)',
+    cardBg: '#c7d8ce',
+    border: 'rgba(5, 150, 105, 0.2)',
   },
 ];
 
@@ -78,7 +93,6 @@ export function ComingSoonSection() {
   const cardRef = useRef<HTMLElement>(null);
   const heroStageRef = useRef<HTMLDivElement>(null);
   const flowerRef = useRef<HTMLDivElement>(null);
-  const auraRef = useRef<HTMLDivElement>(null);
   const dockRef = useRef<HTMLDivElement>(null);
   const thumbnailRef = useRef<HTMLDivElement>(null);
   const xToRef = useRef<gsap.QuickToFunc | null>(null);
@@ -243,23 +257,24 @@ export function ComingSoonSection() {
         ease: 'power2.out',
         overwrite: 'auto',
       });
-      if (auraRef.current) {
-        gsap.to(auraRef.current, {
-          background: PILLAR_ATMOSPHERES[0].aura,
-          duration: 0.6,
+      const defaultAtmosphere = PILLAR_ATMOSPHERES[0];
+      const root = document.querySelector<HTMLElement>('.botanica-viewport-root');
+      if (root) {
+        gsap.to(root, {
+          background: defaultAtmosphere.bg,
+          duration: 0.7,
           ease: 'power2.out',
         });
       }
-      if (flowerRef.current) {
-        const img = flowerRef.current.querySelector('img');
-        if (img) {
-          gsap.to(img, {
-            filter: PILLAR_ATMOSPHERES[0].flowerFilter,
-            duration: 0.6,
-            ease: 'power2.out',
-          });
-        }
+      if (cardRef.current) {
+        gsap.to(cardRef.current, {
+          backgroundColor: defaultAtmosphere.cardBg,
+          borderColor: defaultAtmosphere.border,
+          duration: 0.7,
+          ease: 'power2.out',
+        });
       }
+      setActivePillar(0);
     };
 
     dock.addEventListener('mousemove', handleMouseMove);
@@ -274,22 +289,21 @@ export function ComingSoonSection() {
       const enter = () => {
         setActivePillar(index);
         const atmosphere = PILLAR_ATMOSPHERES[index];
-        if (auraRef.current) {
-          gsap.to(auraRef.current, {
-            background: atmosphere.aura,
-            duration: 0.5,
+        const root = document.querySelector<HTMLElement>('.botanica-viewport-root');
+        if (root) {
+          gsap.to(root, {
+            background: atmosphere.bg,
+            duration: 0.6,
             ease: 'power2.out',
           });
         }
-        if (flowerRef.current) {
-          const img = flowerRef.current.querySelector('img');
-          if (img) {
-            gsap.to(img, {
-              filter: atmosphere.flowerFilter,
-              duration: 0.5,
-              ease: 'power2.out',
-            });
-          }
+        if (cardRef.current) {
+          gsap.to(cardRef.current, {
+            backgroundColor: atmosphere.cardBg,
+            borderColor: atmosphere.border,
+            duration: 0.6,
+            ease: 'power2.out',
+          });
         }
         gsap.to(thumb, {
           scale: 1,
@@ -335,7 +349,8 @@ export function ComingSoonSection() {
       <section className="botanica-card" ref={cardRef} aria-label="MyOneOpinion Editorial Coming Soon">
         {/* 1. Minimal Top Header Bar */}
         <header className="botanica-header">
-          <div className="botanica-header-left">
+          <div className="botanica-header-left" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <img src="/favicon-32x32.png" alt="" width={20} height={20} style={{ borderRadius: '5px', display: 'block' }} aria-hidden="true" />
             <span className="botanica-tagline">sanctuary</span>
           </div>
 
@@ -366,23 +381,35 @@ export function ComingSoonSection() {
 
         {/* 2. Center Stage with Overlapping Typography & Floral Centerpiece */}
         <div className="botanica-hero-stage" ref={heroStageRef}>
-          {/* Dynamic Ambient Atmosphere Glow responsive to hovered pillars */}
-          <div className="botanica-ambient-aura" ref={auraRef} aria-hidden="true" />
-
           {/* Top Giant Typography (Background Layer) */}
           <h1 className="botanica-giant-title" aria-label="MyOneOpinion">
             MYONEOPINION
           </h1>
 
-          {/* Foreground Botanical Lily Centerpiece (Intertwines over text) */}
+          {/* Foreground Botanical Centerpiece (Swaps dynamically between 4 flower species on theme hover) */}
           <div className="botanica-floral-container" ref={flowerRef} aria-hidden="true">
-            <img
-              src={botanicalLily}
-              alt="Botanical Yellow Lily floral arrangement"
-              className="botanica-floral-img"
-              loading="eager"
-              draggable={false}
-            />
+            {FLOWERS.map((flowerSrc, idx) => (
+              <img
+                key={idx}
+                src={flowerSrc}
+                alt={PILLARS[idx].name}
+                className={`botanica-floral-img botanica-flower-${idx}`}
+                style={{
+                  position: idx === 0 ? 'relative' : 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                  opacity: activePillar === idx ? 1 : 0,
+                  transform: activePillar === idx ? 'scale(1) translateY(0)' : 'scale(0.96) translateY(10px)',
+                  transition: 'opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1)',
+                  pointerEvents: 'none',
+                }}
+                loading="eager"
+                draggable={false}
+              />
+            ))}
           </div>
 
           {/* Left Flanking Editorial Text */}
