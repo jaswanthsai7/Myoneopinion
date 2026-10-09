@@ -47,10 +47,136 @@ export function ComingSoonSection() {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [activePillar, setActivePillar] = useState<number>(0);
 
+  const cardRef = useRef<HTMLElement>(null);
+  const heroStageRef = useRef<HTMLDivElement>(null);
+  const flowerRef = useRef<HTMLDivElement>(null);
   const dockRef = useRef<HTMLDivElement>(null);
   const thumbnailRef = useRef<HTMLDivElement>(null);
   const xToRef = useRef<gsap.QuickToFunc | null>(null);
   const yToRef = useRef<gsap.QuickToFunc | null>(null);
+
+  // 1. Apple-Grade Page Load Choreography & Botanical Flower Bloom Entrance
+  useEffect(() => {
+    const card = cardRef.current;
+    const flower = flowerRef.current;
+    if (!card || !flower) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      // Card container smooth scale-in & breath
+      tl.fromTo(
+        card,
+        { opacity: 0, scale: 0.97, y: 22 },
+        { opacity: 1, scale: 1, y: 0, duration: 1.1, ease: 'power3.out' }
+      );
+
+      // Header elements glide down softly
+      tl.fromTo(
+        card.querySelectorAll('.botanica-header > *'),
+        { opacity: 0, y: -14 },
+        { opacity: 1, y: 0, duration: 0.7, stagger: 0.08, ease: 'power2.out' },
+        '-=0.7'
+      );
+
+      // Giant Title emerges with subtle deblur
+      tl.fromTo(
+        card.querySelector('.botanica-giant-title'),
+        { opacity: 0, y: 40, filter: 'blur(8px)' },
+        { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.25, ease: 'power3.out' },
+        '-=0.7'
+      );
+
+      // THE FLOWER BLOOMING ENTRANCE:
+      // Glides and blossoms up from below into full view
+      tl.fromTo(
+        flower,
+        { opacity: 0, y: 110, scale: 0.88, filter: 'blur(6px)' },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          filter: 'blur(0px)',
+          duration: 1.6,
+          ease: 'power3.out',
+          onComplete: () => {
+            // Calm living ambient float after entrance
+            gsap.to(flower, {
+              y: '-=10',
+              duration: 4.2,
+              ease: 'sine.inOut',
+              repeat: -1,
+              yoyo: true,
+            });
+          },
+        },
+        '-=1.0'
+      );
+
+      // Flanking editorial quotes reveal from sides
+      tl.fromTo(
+        card.querySelectorAll('.botanica-flank'),
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.9, stagger: 0.1, ease: 'power2.out' },
+        '-=0.9'
+      );
+
+      // COMING SOON faded text ascends
+      tl.fromTo(
+        card.querySelector('.botanica-faded-bottom'),
+        { opacity: 0, y: 30 },
+        { opacity: 0.14, y: 0, duration: 1.1, ease: 'power2.out' },
+        '-=0.8'
+      );
+
+      // Dock items glide up with stagger
+      tl.fromTo(
+        card.querySelectorAll('.botanica-dock-item'),
+        { opacity: 0, y: 22 },
+        { opacity: 1, y: 0, duration: 0.65, stagger: 0.07, ease: 'power2.out' },
+        '-=0.7'
+      );
+    }, cardRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // 2. Interactive Spatial Mouse Parallax for Lilies
+  useEffect(() => {
+    const stage = heroStageRef.current;
+    const flower = flowerRef.current;
+    if (!stage || !flower) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const xFlower = gsap.quickTo(flower, 'x', { duration: 0.6, ease: 'power2.out' });
+    const yFlower = gsap.quickTo(flower, 'y', { duration: 0.6, ease: 'power2.out' });
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = stage.getBoundingClientRect();
+      const relX = (e.clientX - rect.left) / rect.width - 0.5;
+      const relY = (e.clientY - rect.top) / rect.height - 0.5;
+      xFlower(relX * 24);
+      yFlower(relY * 16);
+    };
+
+    const handleMouseLeave = () => {
+      xFlower(0);
+      yFlower(0);
+    };
+
+    stage.addEventListener('mousemove', handleMouseMove);
+    stage.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      stage.removeEventListener('mousemove', handleMouseMove);
+      stage.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
 
   // GSAP 60fps cursor follower for the Obsidian floating cards on hover
   useEffect(() => {
@@ -139,7 +265,7 @@ export function ComingSoonSection() {
   return (
     <div className="botanica-page-wrapper">
       {/* Main Luxury Botanica-Inspired Frame - Contained height */}
-      <section className="botanica-card" aria-label="MyOneOpinion Editorial Coming Soon">
+      <section className="botanica-card" ref={cardRef} aria-label="MyOneOpinion Editorial Coming Soon">
         {/* 1. Minimal Top Header Bar */}
         <header className="botanica-header">
           <div className="botanica-header-left">
@@ -172,14 +298,14 @@ export function ComingSoonSection() {
         </header>
 
         {/* 2. Center Stage with Overlapping Typography & Floral Centerpiece */}
-        <div className="botanica-hero-stage">
+        <div className="botanica-hero-stage" ref={heroStageRef}>
           {/* Top Giant Typography (Background Layer) */}
           <h1 className="botanica-giant-title" aria-label="MyOneOpinion">
             MYONEOPINION
           </h1>
 
           {/* Foreground Botanical Lily Centerpiece (Intertwines over text) */}
-          <div className="botanica-floral-container" aria-hidden="true">
+          <div className="botanica-floral-container" ref={flowerRef} aria-hidden="true">
             <img
               src={botanicalLily}
               alt="Botanical Yellow Lily floral arrangement"

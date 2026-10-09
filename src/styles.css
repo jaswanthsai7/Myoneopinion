@@ -1061,12 +1061,14 @@
   bottom: -4%;
   left: 50%;
   transform: translateX(-50%);
+  transform-origin: bottom center;
   height: 105%;
   z-index: 5;
   pointer-events: none;
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  will-change: transform, opacity;
 }
 
 .botanica-floral-img {
