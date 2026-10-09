@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "jaswanthsai7-myoneopinion",
+  "compatibility_date": "2026-10-10",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "myoneopinion",
+      "database_id": "3ba1795d-5878-426c-8ed7-5d3afef4b999"
+    }
+  ]
+}
