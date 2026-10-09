@@ -1,39 +1,52 @@
 import { useEffect, useState } from 'react';
 
-const STORAGE_KEY = 'myoneopinion_real_visits';
-const SESSION_KEY = 'myoneopinion_session_active';
+const SESSION_KEY = 'myoneopinion_counted_session';
 
 export function useVisitCount() {
-  const [visits, setVisits] = useState<number>(1);
-  const [isLive] = useState<boolean>(true);
+  const [visits, setVisits] = useState<number>(8);
+  const [isLive, setIsLive] = useState<boolean>(true);
 
   useEffect(() => {
-    try {
-      // Clean up any legacy dummy count data if it exists in localStorage
-      localStorage.removeItem('myoneopinion_site_visits');
+    let isMounted = true;
 
-      // 1. Read real stored visits (starts at 1)
-      const stored = localStorage.getItem(STORAGE_KEY);
-      let count = stored ? parseInt(stored, 10) : 0;
-      if (isNaN(count) || count < 0) {
-        count = 0;
+    async function syncGlobalVisits() {
+      try {
+        const hasCountedSession = sessionStorage.getItem(SESSION_KEY);
+        const method = hasCountedSession ? 'GET' : 'POST';
+
+        const res = await fetch('/api/visits', {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (typeof data.visits === 'number' && isMounted) {
+            setVisits(data.visits);
+            sessionStorage.setItem(SESSION_KEY, 'true');
+            return;
+          }
+        }
+
+        // Fallback: fetch static public visits.json
+        const fallbackRes = await fetch('/visits.json');
+        if (fallbackRes.ok) {
+          const fallbackData = await fallbackRes.json();
+          if (typeof fallbackData.count === 'number' && isMounted) {
+            setVisits(fallbackData.count);
+          }
+        }
+      } catch {
+        // Keep initial fallback
+        setIsLive(false);
       }
-
-      // 2. Track new visit on unique session
-      const sessionActive = sessionStorage.getItem(SESSION_KEY);
-      if (!sessionActive) {
-        count += 1;
-        sessionStorage.setItem(SESSION_KEY, 'true');
-        localStorage.setItem(STORAGE_KEY, count.toString());
-      } else if (count === 0) {
-        count = 1;
-        localStorage.setItem(STORAGE_KEY, '1');
-      }
-
-      setVisits(count);
-    } catch {
-      setVisits(1);
     }
+
+    syncGlobalVisits();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return {

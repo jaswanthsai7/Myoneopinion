@@ -91,6 +91,17 @@ export function ComingSoonSection() {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [activePillar, setActivePillar] = useState<number>(0);
 
+  useEffect(() => {
+    try {
+      if (localStorage.getItem('myoneopinion_waitlist_registered') === 'true') {
+        setSubscribed(true);
+      }
+      localStorage.removeItem('nadhebe_subscriber_email');
+      localStorage.removeItem('myoneopinion_subscriber_email');
+      localStorage.removeItem('myoneopinion_waitlist');
+    } catch {}
+  }, []);
+
   const cardRef = useRef<HTMLElement>(null);
   const heroStageRef = useRef<HTMLDivElement>(null);
   const flowerRef = useRef<HTMLDivElement>(null);
@@ -331,12 +342,11 @@ export function ComingSoonSection() {
     if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) return;
     setIsSubmitting(true);
     try {
-      // Store locally (matching Nadhebe subscriber persistence)
-      localStorage.setItem('nadhebe_subscriber_email', cleanEmail);
-      localStorage.setItem('myoneopinion_subscriber_email', cleanEmail);
-      const waitlist = JSON.parse(localStorage.getItem('myoneopinion_waitlist') || '[]');
-      waitlist.push({ email: cleanEmail, date: new Date().toISOString() });
-      localStorage.setItem('myoneopinion_waitlist', JSON.stringify(waitlist));
+      localStorage.setItem('myoneopinion_waitlist_registered', 'true');
+      // Purge any legacy stored plaintext emails for privacy
+      localStorage.removeItem('nadhebe_subscriber_email');
+      localStorage.removeItem('myoneopinion_subscriber_email');
+      localStorage.removeItem('myoneopinion_waitlist');
 
       await fetch('/api/subscribe', {
         method: 'POST',
