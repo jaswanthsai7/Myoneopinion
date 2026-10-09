@@ -1,86 +1,135 @@
-import { useState, useEffect } from 'react';
-import { ArrowRight, Sparkles, Check, Bell, Clock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { HoverImg, type ProjectItem } from '@/components/ui/hover-img';
+import { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import * as Dialog from '@radix-ui/react-dialog';
+import { ArrowRight, Check, Bell, X, Sparkles } from 'lucide-react';
 import { useVisitCount } from '@/hooks/use-visit-count';
 
+import botanicalLily from '@/assets/botanical-lily-transparent.png';
 import cardManifesto from '@/assets/card-manifesto.svg';
 import cardResonance from '@/assets/card-resonance.svg';
 import cardBoost from '@/assets/card-boost.svg';
-import cardVoice from '@/assets/card-voice.svg';
 import cardLegacy from '@/assets/card-legacy.svg';
 
-const COMING_SOON_PROJECTS: ProjectItem[] = [
+interface PillarItem {
+  id: string;
+  name: string;
+  label: string;
+  tag: string;
+  imageSrc: string;
+}
+
+const PILLARS: PillarItem[] = [
   {
-    title: 'The One Opinion Manifesto',
+    id: 'manifesto',
+    name: 'the manifesto',
     label: '280 characters. Say it once. Yours forever.',
+    tag: 'Immutable Artifact',
     imageSrc: cardManifesto,
-    tag: 'Core Concept',
   },
   {
-    title: 'The Resonance Engine',
+    id: 'resonance',
+    name: 'resonance engine',
     label: 'Ranked purely by depth of human connection.',
+    tag: 'Pure Connection',
     imageSrc: cardResonance,
-    tag: 'Feed',
   },
   {
-    title: 'Hype Points & Boost Economy',
+    id: 'boost',
+    name: 'boost economy',
     label: 'Community lift for genuine perspectives.',
-    imageSrc: cardBoost,
     tag: 'Empowerment',
+    imageSrc: cardBoost,
   },
   {
-    title: 'A Human Sanctuary',
-    label: 'Zero followers. Zero noise. Zero algorithmic rage.',
-    imageSrc: cardVoice,
-    tag: 'Philosophy',
-  },
-  {
-    title: 'Permanent Canonical Link',
-    label: 'Your timeless digital artifact to share.',
+    id: 'canonical',
+    name: 'canonical link',
+    label: 'Your permanent canonical web address.',
+    tag: 'Digital Identity',
     imageSrc: cardLegacy,
-    tag: 'Identity',
   },
 ];
 
-export function ComingSoonSection({
-  showFeed = false,
-  onToggleFeed,
-}: {
-  showFeed?: boolean;
-  onToggleFeed?: () => void;
-}) {
+export function ComingSoonSection() {
   const { visits, formattedVisits } = useVisitCount();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [activePillar, setActivePillar] = useState<number>(0);
 
-  // Dynamic real countdown to launch date (July 1, 2026)
-  const [timeLeft, setTimeLeft] = useState(() => {
-    const target = new Date('2026-07-01T00:00:00Z').getTime();
-    const now = Date.now();
-    const diff = Math.max(0, target - now);
-    return {
-      days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((diff / (1000 * 60)) % 60),
-      seconds: Math.floor((diff / 1000) % 60),
-    };
-  });
+  const dockRef = useRef<HTMLDivElement>(null);
+  const thumbnailRef = useRef<HTMLDivElement>(null);
+  const xToRef = useRef<gsap.QuickToFunc | null>(null);
+  const yToRef = useRef<gsap.QuickToFunc | null>(null);
 
+  // GSAP 60fps cursor follower for the Obsidian floating cards on hover
   useEffect(() => {
-    const target = new Date('2026-07-01T00:00:00Z').getTime();
-    const update = () => {
-      const now = Date.now();
-      const diff = Math.max(0, target - now);
-      setTimeLeft({
-        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((diff / (1000 * 60)) % 60),
-        seconds: Math.floor((diff / 1000) % 60),
+    const thumb = thumbnailRef.current;
+    const dock = dockRef.current;
+    if (!thumb || !dock) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    gsap.set(thumb, {
+      scale: 0,
+      xPercent: -50,
+      yPercent: -50,
+      autoAlpha: 0,
+    });
+
+    if (!prefersReducedMotion) {
+      xToRef.current = gsap.quickTo(thumb, 'x', { duration: 0.32, ease: 'power3.out' });
+      yToRef.current = gsap.quickTo(thumb, 'y', { duration: 0.32, ease: 'power3.out' });
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      xToRef.current?.(e.clientX);
+      yToRef.current?.(e.clientY);
+    };
+
+    const handleMouseLeave = () => {
+      gsap.to(thumb, {
+        scale: 0,
+        autoAlpha: 0,
+        duration: 0.22,
+        ease: 'power2.out',
+        overwrite: 'auto',
       });
     };
-    const timer = setInterval(update, 1000);
-    return () => clearInterval(timer);
+
+    dock.addEventListener('mousemove', handleMouseMove);
+    dock.addEventListener('mouseleave', handleMouseLeave);
+
+    const items = dock.querySelectorAll('.botanica-dock-item');
+    const thumbImages = thumb.querySelectorAll('.hover-img-thumbnail');
+
+    const cleanups: Array<() => void> = [];
+
+    items.forEach((item, index) => {
+      const enter = () => {
+        setActivePillar(index);
+        gsap.to(thumb, {
+          scale: 1,
+          autoAlpha: 1,
+          duration: prefersReducedMotion ? 0 : 0.3,
+          ease: 'back.out(1.4)',
+          overwrite: 'auto',
+        });
+        gsap.to(thumbImages, {
+          yPercent: -100 * index,
+          duration: prefersReducedMotion ? 0 : 0.35,
+          ease: 'power3.out',
+          overwrite: 'auto',
+        });
+      };
+      item.addEventListener('mouseenter', enter);
+      cleanups.push(() => item.removeEventListener('mouseenter', enter));
+    });
+
+    return () => {
+      dock.removeEventListener('mousemove', handleMouseMove);
+      dock.removeEventListener('mouseleave', handleMouseLeave);
+      cleanups.forEach(c => c());
+    };
   }, []);
 
   const handleSubscribe = (e: React.FormEvent) => {
@@ -97,136 +146,178 @@ export function ComingSoonSection({
   };
 
   return (
-    <section className="coming-soon-hero" aria-label="Coming Soon Information">
-      {/* Background ambient lighting */}
-      <div className="coming-soon-ambient" aria-hidden="true" />
-
-      <div className="coming-soon-container">
-        {/* ObsidianUI Pill Badges Bar */}
-        <div className="coming-soon-badges">
-          <div className="obsidian-pill obsidian-pill-launch">
-            <span className="obsidian-pill-icon">📁</span>
-            <span>Coming Soon • Public Launch Q2 2026</span>
+    <div className="botanica-page-wrapper">
+      {/* Main Luxury Botanica-Inspired Frame - Contained height */}
+      <section className="botanica-card" aria-label="MyOneOpinion Editorial Coming Soon">
+        {/* 1. Minimal Top Header Bar */}
+        <header className="botanica-header">
+          <div className="botanica-header-left">
+            <span className="botanica-tagline">sanctuary</span>
           </div>
 
-          <div className="obsidian-pill obsidian-pill-visits" title="Real unique visits recorded for MyOneOpinion">
-            <span className="live-pulse-dot" aria-hidden="true">
-              <span className="pulse-ring" />
-              <span className="pulse-core" />
-            </span>
-            <span className="font-semibold text-foreground">{formattedVisits}</span>
-            <span className="text-muted-foreground">{visits === 1 ? 'Visit' : 'Visits'}</span>
+          <div className="botanica-header-center">
+            <span className="botanica-wordmark-top">M Y O N E O P I N I O N</span>
           </div>
 
-          <div className="obsidian-pill obsidian-pill-tag">
-            <span>React • TypeScript • Tailwind</span>
-          </div>
-        </div>
-
-        {/* Big Bold Obsidian & Apple Typography */}
-        <div className="coming-soon-headings">
-          <h1 className="coming-soon-title">
-            Say less. <br />
-            <span className="coming-soon-highlight">Mean more.</span>
-          </h1>
-          <p className="coming-soon-subtitle">
-            What’s the one opinion you want to leave behind? A quiet sanctuary for words that matter.
-            One life. One opinion. Forever. The public platform is launching soon.
-          </p>
-        </div>
-
-        {/* Countdown & Early Access Bar */}
-        <div className="coming-soon-action-bar">
-          <div className="countdown-group" aria-label="Launch Countdown">
-            <div className="countdown-item">
-              <span className="countdown-number">{timeLeft.days}</span>
-              <span className="countdown-label">Days</span>
+          <div className="botanica-header-right">
+            {/* Live Visit Badge */}
+            <div className="botanica-visit-pill" title="Real unique visits recorded">
+              <span className="live-pulse-dot" aria-hidden="true">
+                <span className="pulse-ring" />
+                <span className="pulse-core" />
+              </span>
+              <span>{formattedVisits} {visits === 1 ? 'visit' : 'visits'}</span>
             </div>
-            <span className="countdown-sep">:</span>
-            <div className="countdown-item">
-              <span className="countdown-number">{String(timeLeft.hours).padStart(2, '0')}</span>
-              <span className="countdown-label">Hours</span>
-            </div>
-            <span className="countdown-sep">:</span>
-            <div className="countdown-item">
-              <span className="countdown-number">{String(timeLeft.minutes).padStart(2, '0')}</span>
-              <span className="countdown-label">Mins</span>
-            </div>
-            <span className="countdown-sep">:</span>
-            <div className="countdown-item">
-              <span className="countdown-number">{String(timeLeft.seconds).padStart(2, '0')}</span>
-              <span className="countdown-label">Secs</span>
-            </div>
-          </div>
 
-          {/* ObsidianUI Capsule Form */}
-          {subscribed ? (
-            <div className="early-access-success">
-              <Check className="text-emerald-500" size={16} />
-              <span>You’re on the early access list. We’ll invite you on launch day!</span>
-            </div>
-          ) : (
-            <form onSubmit={handleSubscribe} className="obsidian-capsule-input">
-              <Bell size={15} className="text-muted-foreground ml-3 shrink-0" />
-              <input
-                type="email"
-                required
-                placeholder="Enter email to get notified on launch..."
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                className="obsidian-input-field"
-                aria-label="Early access email address"
-              />
-              <button type="submit" className="obsidian-cta-btn">
-                <span>Notify Me</span>
-                <ArrowRight size={14} />
-              </button>
-            </form>
-          )}
-        </div>
-
-        {/* ObsidianUI Hover Image Showcase Header */}
-        <div className="hover-showcase-header">
-          <div className="flex items-center gap-2">
-            <Sparkles size={16} className="text-boost" />
-            <span className="hover-showcase-eyebrow">WHAT WE’RE BUILDING</span>
-          </div>
-          <p className="hover-showcase-hint">
-            Hover over any pillar below to inspect preview cards
-          </p>
-        </div>
-
-        {/* ObsidianUI HoverImg Integration */}
-        <div className="hover-img-wrapper-card">
-          <HoverImg projects={COMING_SOON_PROJECTS} />
-        </div>
-
-        {/* Bottom Navigation & Preview Anchor */}
-        <div className="coming-soon-footer-bar">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Clock size={14} />
-            <span>Site currently in pre-launch mode</span>
-          </div>
-
-          {onToggleFeed && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onToggleFeed}
-              className="rounded-full px-5 text-xs font-medium"
+            <button
+              type="button"
+              onClick={() => setWaitlistOpen(true)}
+              className="botanica-header-link"
+              aria-label="Open early access waitlist"
             >
-              <span>{showFeed ? 'Hide Prototype Feed' : 'Preview Prototype Feed'}</span>
-              <ArrowRight
-                size={13}
-                className={`ml-2 transition-transform duration-200 ${
-                  showFeed ? 'rotate-90' : ''
-                }`}
-              />
-            </Button>
-          )}
+              access (0)
+            </button>
+          </div>
+        </header>
+
+        {/* 2. Center Stage with Overlapping Typography & Floral Centerpiece */}
+        <div className="botanica-hero-stage">
+          {/* Top Giant Typography (Background Layer) */}
+          <h1 className="botanica-giant-title" aria-label="MyOneOpinion">
+            MYONEOPINION
+          </h1>
+
+          {/* Foreground Botanical Lily Centerpiece (Intertwines over text) */}
+          <div className="botanica-floral-container" aria-hidden="true">
+            <img
+              src={botanicalLily}
+              alt="Botanical Yellow Lily floral arrangement"
+              className="botanica-floral-img"
+              loading="eager"
+              draggable={false}
+            />
+          </div>
+
+          {/* Left Flanking Editorial Text */}
+          <div className="botanica-flank botanica-flank-left">
+            <p className="botanica-flank-title">
+              one opinion &amp;<br />
+              eternal artifact
+            </p>
+            <span className="botanica-flank-sub">280 characters · immutable</span>
+          </div>
+
+          {/* Right Flanking Editorial Text */}
+          <div className="botanica-flank botanica-flank-right">
+            <p className="botanica-flank-title">
+              say it once,<br />
+              yours forever
+            </p>
+            <span className="botanica-flank-sub">a quiet sanctuary · 2026</span>
+          </div>
+
+          {/* Bottom Giant Faded Typography */}
+          <div className="botanica-faded-bottom" aria-hidden="true">
+            COMING SOON
+          </div>
         </div>
-      </div>
-    </section>
+
+        {/* 3. Bottom Interactive Split Dock with ObsidianUI Hover Triggers */}
+        <nav className="botanica-dock" ref={dockRef} aria-label="Core Pillars Showcase">
+          {PILLARS.map((pillar, idx) => (
+            <div
+              key={pillar.id}
+              className="botanica-dock-item"
+              role="button"
+              tabIndex={0}
+              aria-label={`${pillar.name}: ${pillar.label}`}
+              onClick={() => setWaitlistOpen(true)}
+            >
+              <div className="botanica-dock-content">
+                <span className="botanica-dock-name">{pillar.name}</span>
+                <span className="botanica-dock-tag">{pillar.tag}</span>
+              </div>
+              <span className="botanica-dock-arrow" aria-hidden="true">→</span>
+            </div>
+          ))}
+        </nav>
+
+        {/* Floating ObsidianUI Thumbnail Follower Window */}
+        <div className="hover-img-thumbnail-wrapper" ref={thumbnailRef} aria-hidden="true">
+          {PILLARS.map((pillar, idx) => (
+            <div className="hover-img-thumbnail" key={idx}>
+              <img
+                src={pillar.imageSrc}
+                alt={pillar.name}
+                loading="lazy"
+                draggable={false}
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Subtle Caption Footer */}
+      <footer className="botanica-subtle-footer">
+        <span>© 2026 MyOneOpinion</span>
+        <span>•</span>
+        <span>One opinion. Forever.</span>
+      </footer>
+
+      {/* Early Access Modal */}
+      <Dialog.Root open={waitlistOpen} onOpenChange={setWaitlistOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="botanica-modal-overlay" />
+          <Dialog.Content className="botanica-modal-content">
+            <Dialog.Close asChild>
+              <button className="botanica-modal-close" aria-label="Close dialog">
+                <X size={18} />
+              </button>
+            </Dialog.Close>
+
+            <div className="botanica-modal-badge">
+              <Sparkles size={13} className="text-[#1a1918]" />
+              <span>EARLY ACCESS INVITATION</span>
+            </div>
+
+            <Dialog.Title className="botanica-modal-title">
+              Claim your canonical voice.
+            </Dialog.Title>
+
+            <Dialog.Description className="botanica-modal-desc">
+              Everyone gets one opinion. Reserve your canonical handle and immutable space before the public launch in 2026.
+            </Dialog.Description>
+
+            {subscribed ? (
+              <div className="botanica-modal-success">
+                <Check className="text-emerald-700 shrink-0" size={17} />
+                <span>You’re registered. We’ll send your invitation upon launch!</span>
+              </div>
+            ) : (
+              <form onSubmit={handleSubscribe} className="botanica-modal-form">
+                <div className="botanica-modal-input-wrap">
+                  <Bell size={15} className="text-[#1a1918]/60 shrink-0 ml-3" />
+                  <input
+                    type="email"
+                    required
+                    placeholder="enter your email address..."
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    className="botanica-modal-input"
+                    aria-label="Early access email address"
+                    autoFocus
+                  />
+                </div>
+                <button type="submit" className="botanica-modal-submit">
+                  <span>Request Invitation</span>
+                  <ArrowRight size={14} />
+                </button>
+              </form>
+            )}
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </div>
   );
 }
 

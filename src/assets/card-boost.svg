@@ -1,60 +1,61 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
   <defs>
-    <linearGradient id="boostBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#09090b"/>
-      <stop offset="100%" stop-color="#141416"/>
+    <linearGradient id="appleBoostBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbfbfd"/>
+      <stop offset="100%" stop-color="#f3f3f8"/>
     </linearGradient>
-    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fbbf24"/>
-      <stop offset="100%" stop-color="#d97706"/>
+    <linearGradient id="appleBoostGlass" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#fafafc"/>
     </linearGradient>
-    <linearGradient id="boostPanel" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
-      <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
-    </linearGradient>
+    <filter id="softShadowBoost" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#000000" flood-opacity="0.06"/>
+    </filter>
   </defs>
-  <rect width="800" height="500" fill="url(#boostBg)"/>
-  <circle cx="400" cy="240" r="280" fill="#d97706" opacity="0.08" filter="blur(75px)"/>
   
-  <rect x="70" y="60" width="660" height="380" rx="24" fill="url(#boostPanel)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+  <rect width="800" height="500" fill="url(#appleBoostBg)"/>
+  <circle cx="400" cy="220" r="280" fill="#e0e7ff" opacity="0.4" filter="blur(70px)"/>
+  
+  <!-- Apple Surface Card -->
+  <rect x="70" y="60" width="660" height="380" rx="28" fill="url(#appleBoostGlass)" stroke="rgba(0,0,0,0.06)" stroke-width="1.5" filter="url(#softShadowBoost)"/>
   
   <g transform="translate(110, 105)">
-    <rect width="135" height="28" rx="14" fill="rgba(245,158,11,0.12)" stroke="rgba(245,158,11,0.3)" stroke-width="1"/>
-    <circle cx="16" cy="14" r="4" fill="#fbbf24"/>
-    <text x="28" y="18" fill="#fbbf24" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', Inter, sans-serif" font-size="11" font-weight="600" letter-spacing="0.5">HYPE ECONOMY</text>
-    <text x="500" y="18" text-anchor="end" fill="rgba(255,255,255,0.4)" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, sans-serif" font-size="12">100 Points per $1 Lift</text>
+    <rect width="135" height="28" rx="14" fill="#f4f4f6" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+    <circle cx="16" cy="14" r="3.5" fill="#1d1d1f"/>
+    <text x="28" y="18" fill="#1d1d1f" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, sans-serif" font-size="11" font-weight="600" letter-spacing="0.4">HYPE ECONOMY</text>
+    <text x="500" y="18" text-anchor="end" fill="#86868b" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif" font-size="12">100 Points per $1 Lift</text>
   </g>
   
   <!-- Big Stat in Apple Keynote Style -->
   <g transform="translate(110, 160)">
-    <text x="0" y="70" fill="url(#amberGrad)" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="76" font-weight="700" letter-spacing="-2">
+    <text x="0" y="70" fill="#1d1d1f" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-size="74" font-weight="700" letter-spacing="-2.5">
       50,000
     </text>
-    <text x="280" y="45" fill="#fbbf24" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="20" font-weight="600">✦ Hype Points</text>
-    <text x="280" y="70" fill="rgba(255,255,255,0.5)" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14">Elevating pure voices across the globe</text>
+    <text x="280" y="45" fill="#1d1d1f" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="20" font-weight="600">✦ Hype Points</text>
+    <text x="280" y="70" fill="#86868b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14">Community support elevating honest voices</text>
   </g>
   
-  <!-- Lift Tier Capsules -->
+  <!-- Lift Tier Capsules (Clean Apple style) -->
   <g transform="translate(110, 290)">
     <g transform="translate(0, 0)">
-      <rect width="130" height="70" rx="14" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.09)"/>
-      <text x="20" y="32" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="18" font-weight="600">$5 Lift</text>
-      <text x="20" y="52" fill="#fbbf24" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12">500 pts</text>
+      <rect width="130" height="72" rx="16" fill="#f8f8fa" stroke="rgba(0,0,0,0.06)"/>
+      <text x="20" y="33" fill="#1d1d1f" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="600">$5 Lift</text>
+      <text x="20" y="53" fill="#86868b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12">500 pts</text>
     </g>
     <g transform="translate(150, 0)">
-      <rect width="130" height="70" rx="14" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.09)"/>
-      <text x="20" y="32" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="18" font-weight="600">$10 Lift</text>
-      <text x="20" y="52" fill="#fbbf24" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12">1,000 pts</text>
+      <rect width="130" height="72" rx="16" fill="#f8f8fa" stroke="rgba(0,0,0,0.06)"/>
+      <text x="20" y="33" fill="#1d1d1f" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="600">$10 Lift</text>
+      <text x="20" y="53" fill="#86868b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12">1,000 pts</text>
     </g>
     <g transform="translate(300, 0)">
-      <rect width="130" height="70" rx="14" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.09)"/>
-      <text x="20" y="32" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="18" font-weight="600">$25 Lift</text>
-      <text x="20" y="52" fill="#fbbf24" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12">2,500 pts</text>
+      <rect width="130" height="72" rx="16" fill="#f8f8fa" stroke="rgba(0,0,0,0.06)"/>
+      <text x="20" y="33" fill="#1d1d1f" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="600">$25 Lift</text>
+      <text x="20" y="53" fill="#86868b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12">2,500 pts</text>
     </g>
     <g transform="translate(450, 0)">
-      <rect width="130" height="70" rx="14" fill="rgba(245,158,11,0.12)" stroke="rgba(245,158,11,0.3)"/>
-      <text x="20" y="32" fill="#fbbf24" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="18" font-weight="600">Crown Tier</text>
-      <text x="20" y="52" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12">Top Booster Badge</text>
+      <rect width="130" height="72" rx="16" fill="#1d1d1f" stroke="#1d1d1f"/>
+      <text x="20" y="33" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="17" font-weight="600">Top Tier</text>
+      <text x="20" y="53" fill="#d1d5db" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12">Crown Badge</text>
     </g>
   </g>
 </svg>
