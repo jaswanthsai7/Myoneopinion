@@ -139,4 +139,54 @@ describe('Security & API Regression Tests', () => {
     const incrementedData = await postRes.json();
     expect(incrementedData.visits).toBe(initialData.visits + 1);
   });
+
+  it('7. Correctly reads and writes to D1 database binding when DB is present in env', async () => {
+    let storedValue: number | null = null;
+    const mockD1 = {
+      prepare(query: string) {
+        return {
+          bind(...params: any[]) {
+            return {
+              async run() {
+                if (query.includes('INSERT INTO site_stats')) {
+                  storedValue = params[0];
+                }
+                return { success: true };
+              },
+            };
+          },
+          async first() {
+            if (storedValue !== null) {
+              return { value: storedValue };
+            }
+            return null;
+          },
+          async run() {
+            return { success: true };
+          },
+        };
+      },
+    };
+
+    const d1Env = { ...dummyEnv, DB: mockD1 };
+
+    const postReq = new Request('http://localhost:8080/api/visits', {
+      method: 'POST',
+      headers: { 'cf-connecting-ip': '198.51.100.88' },
+    });
+    const postRes = await server.fetch(postReq, d1Env, {});
+    expect(postRes.status).toBe(200);
+    const postData = await postRes.json();
+    expect(postData.source).toBe('d1');
+
+    const getReq = new Request('http://localhost:8080/api/visits', {
+      method: 'GET',
+      headers: { 'cf-connecting-ip': '198.51.100.88' },
+    });
+    const getRes = await server.fetch(getReq, d1Env, {});
+    expect(getRes.status).toBe(200);
+    const getData = await getRes.json();
+    expect(getData.source).toBe('d1');
+    expect(getData.visits).toBe(postData.visits);
+  });
 });

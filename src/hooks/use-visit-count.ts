@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 const SESSION_KEY = 'myoneopinion_counted_session';
 
 export function useVisitCount() {
-  const [visits, setVisits] = useState<number>(8);
+  const [visits, setVisits] = useState<number>(13);
   const [isLive, setIsLive] = useState<boolean>(true);
 
   useEffect(() => {

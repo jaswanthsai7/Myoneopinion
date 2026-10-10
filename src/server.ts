@@ -71,34 +71,55 @@ function isValidEmail(email: unknown): boolean {
 }
 
 // Global Visit Counter Storage
-let inMemoryVisits = 8;
+let inMemoryVisits = 14;
 
-async function getStoredVisits(env: any): Promise<number> {
-  // 1. Try Cloudflare D1 SQLite Database (env.DB or env.D1)
-  const d1 = env?.DB || env?.D1;
+function getD1Binding(request?: Request, env?: any): any {
+  return (
+    env?.DB ||
+    env?.D1 ||
+    (request as any)?.runtime?.cloudflare?.env?.DB ||
+    (request as any)?.runtime?.cloudflare?.env?.D1 ||
+    (globalThis as any)?.__env__?.DB ||
+    (globalThis as any)?.__env__?.D1 ||
+    (globalThis as any)?.DB ||
+    (globalThis as any)?.D1
+  );
+}
+
+async function getStoredVisits(request?: Request, env?: any): Promise<{ visits: number; source: string }> {
+  // 1. Try Cloudflare D1 SQLite Database (env.DB, request.runtime, globalThis)
+  const d1 = getD1Binding(request, env);
   if (d1?.prepare) {
     try {
       await d1.prepare("CREATE TABLE IF NOT EXISTS site_stats (key TEXT PRIMARY KEY, value INTEGER)").run();
       const row = await d1.prepare("SELECT value FROM site_stats WHERE key = 'site_visits'").first();
       if (row && typeof row.value === "number") {
         inMemoryVisits = row.value;
-        return row.value;
+        return { visits: row.value, source: "d1" };
       }
-    } catch {}
+      // If table exists but empty, insert initial counter
+      await d1.prepare("INSERT OR IGNORE INTO site_stats (key, value) VALUES ('site_visits', ?)").bind(inMemoryVisits).run();
+      return { visits: inMemoryVisits, source: "d1" };
+    } catch (err) {
+      console.error("[D1 getStoredVisits Error]:", err);
+    }
   }
 
   // 2. Try Cloudflare KV (env.VISITS_KV)
-  if (env?.VISITS_KV?.get) {
+  const kv = env?.VISITS_KV || (request as any)?.runtime?.cloudflare?.env?.VISITS_KV || (globalThis as any)?.__env__?.VISITS_KV;
+  if (kv?.get) {
     try {
-      const val = await env.VISITS_KV.get("site_visits");
+      const val = await kv.get("site_visits");
       if (val) {
         const num = parseInt(val, 10);
         if (!isNaN(num)) {
           inMemoryVisits = num;
-          return num;
+          return { visits: num, source: "kv" };
         }
       }
-    } catch {}
+    } catch (err) {
+      console.error("[KV getStoredVisits Error]:", err);
+    }
   }
 
   // 3. Try Node.js filesystem (visits.json)
@@ -111,31 +132,39 @@ async function getStoredVisits(env: any): Promise<number> {
       const parsed = JSON.parse(content);
       if (typeof parsed.count === "number") {
         inMemoryVisits = parsed.count;
-        return parsed.count;
+        return { visits: parsed.count, source: "file" };
       }
     } catch {}
   }
 
-  return inMemoryVisits;
+  return { visits: inMemoryVisits, source: "memory_fallback" };
 }
 
-async function setStoredVisits(env: any, count: number): Promise<void> {
+async function setStoredVisits(request: Request | undefined, env: any, count: number): Promise<string> {
   inMemoryVisits = count;
+  let savedSource = "memory_fallback";
 
-  // 1. Cloudflare D1 SQLite Database (env.DB or env.D1)
-  const d1 = env?.DB || env?.D1;
+  // 1. Cloudflare D1 SQLite Database
+  const d1 = getD1Binding(request, env);
   if (d1?.prepare) {
     try {
       await d1.prepare("CREATE TABLE IF NOT EXISTS site_stats (key TEXT PRIMARY KEY, value INTEGER)").run();
       await d1.prepare("INSERT INTO site_stats (key, value) VALUES ('site_visits', ?) ON CONFLICT(key) DO UPDATE SET value = ?").bind(count, count).run();
-    } catch {}
+      savedSource = "d1";
+    } catch (err) {
+      console.error("[D1 setStoredVisits Error]:", err);
+    }
   }
 
-  // 2. Cloudflare KV (env.VISITS_KV)
-  if (env?.VISITS_KV?.put) {
+  // 2. Cloudflare KV
+  const kv = env?.VISITS_KV || (request as any)?.runtime?.cloudflare?.env?.VISITS_KV || (globalThis as any)?.__env__?.VISITS_KV;
+  if (kv?.put) {
     try {
-      await env.VISITS_KV.put("site_visits", count.toString());
-    } catch {}
+      await kv.put("site_visits", count.toString());
+      if (savedSource !== "d1") savedSource = "kv";
+    } catch (err) {
+      console.error("[KV setStoredVisits Error]:", err);
+    }
   }
 
   // 3. Node.js filesystem (visits.json)
@@ -145,8 +174,11 @@ async function setStoredVisits(env: any, count: number): Promise<void> {
       const path = await import("node:path");
       const filePath = path.join(process.cwd(), "public", "visits.json");
       await fs.writeFile(filePath, JSON.stringify({ count, updatedAt: new Date().toISOString() }, null, 2));
+      if (savedSource !== "d1" && savedSource !== "kv") savedSource = "file";
     } catch {}
   }
+
+  return savedSource;
 }
 
 // h3 swallows in-handler throws into a normal 500 Response with body
@@ -194,20 +226,20 @@ export default {
         }
 
         if (request.method === "POST") {
-          const current = await getStoredVisits(env);
-          const next = current + 1;
-          await setStoredVisits(env, next);
+          const current = await getStoredVisits(request, env);
+          const next = current.visits + 1;
+          const source = await setStoredVisits(request, env, next);
           return applySecurityHeaders(
             new Response(
-              JSON.stringify({ success: true, visits: next }),
+              JSON.stringify({ success: true, visits: next, source }),
               { status: 200, headers: { "content-type": "application/json" } }
             )
           );
         } else {
-          const current = await getStoredVisits(env);
+          const current = await getStoredVisits(request, env);
           return applySecurityHeaders(
             new Response(
-              JSON.stringify({ success: true, visits: current }),
+              JSON.stringify({ success: true, visits: current.visits, source: current.source }),
               { status: 200, headers: { "content-type": "application/json" } }
             )
           );
