@@ -93,10 +93,10 @@ function TopLeaderboardPage() {
       />
 
       <main className="flex-1 max-w-[1240px] w-full mx-auto px-4 md:px-8 py-8 md:py-12">
-        {/* Botanical Hero Section */}
-        <div className="relative pt-6 pb-12 text-center overflow-hidden">
+        {/* Botanical Hero / Navigation Bar */}
+        <div className="relative pt-2 pb-3 text-center overflow-hidden">
           {/* Botanical Lily Artwork on Right */}
-          <div className="absolute -top-2 right-0 md:right-6 w-44 md:w-64 pointer-events-none z-0 opacity-90 drop-shadow-md">
+          <div className="absolute -top-6 right-0 md:right-6 w-36 md:w-52 pointer-events-none z-0 opacity-85 drop-shadow-sm">
             <img
               src={lilyImg}
               alt=""
@@ -105,13 +105,9 @@ function TopLeaderboardPage() {
           </div>
 
           <div className="relative z-10 max-w-3xl mx-auto px-4">
-            {/* Navigation Tabs Above Headline */}
+            <h1 className="sr-only">MyOneOpinion — Permanent Global Leaderboard</h1>
+            {/* Navigation Tabs */}
             <NavTabs activeTab="top" />
-
-            {/* Massive Editorial Headline */}
-            <h1 className="font-editorial text-5xl md:text-7xl lg:text-8xl font-normal tracking-tight text-[#191713] drop-shadow-2xs">
-              MYONEOPINION
-            </h1>
           </div>
         </div>
 
