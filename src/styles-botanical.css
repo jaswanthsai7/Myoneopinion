@@ -1,4 +1,4 @@
-/* Botanical Sanctuary & Editorial Global Leaderboard Theme */
+/* Botanical Sanctuary & Warm Sunlit Parchment Theme (Direct "Night Light" Palette) */
 
 @layer utilities {
   .font-editorial {
@@ -10,47 +10,60 @@
   }
 }
 
+:root {
+  --bg-parchment: #F3EBDD;
+  --surface-linen: #E8DCBE;
+  --surface-cream: #F5EEDB;
+  --surface-sidebar: #EDE2CD;
+  --border-taupe: #D7C29F;
+  --border-light: #DEC9A8;
+  --ink-primary: #1A1612;
+  --ink-muted: #746857;
+  --accent-gold: #BD841A;
+  --accent-gold-light: #D49622;
+}
+
 .botanical-bg {
-  background-color: #F8F5EE;
-  color: #191713;
+  background-color: #F3EBDD;
+  color: #1A1612;
   min-height: 100vh;
 }
 
 .botanical-card {
-  background-color: #EFE4D2;
-  border: 1px solid #DFCEB7;
+  background-color: #E8DCBE;
+  border: 1px solid #D7C29F;
   border-radius: 24px;
 }
 
 .botanical-card-inner {
-  background-color: #F9F6EF;
-  border: 1px solid #E8DCBE;
+  background-color: #F5EEDB;
+  border: 1px solid #DEC9A8;
   border-radius: 16px;
 }
 
 .botanical-sidebar-card {
-  background-color: #F5EDE0;
-  border: 1px solid #E5D7C2;
+  background-color: #EDE2CD;
+  border: 1px solid #D9C5A3;
   border-radius: 20px;
 }
 
 .btn-gold {
-  background: linear-gradient(180deg, #D4A32A 0%, #B8851B 100%);
+  background: linear-gradient(180deg, #CE9224 0%, #AF7414 100%);
   color: #FFFFFF;
   font-weight: 600;
   border-radius: 9999px;
   transition: all 0.2s ease-in-out;
-  box-shadow: 0 2px 8px rgba(184, 133, 27, 0.25);
+  box-shadow: 0 2px 8px rgba(175, 116, 20, 0.28);
 }
 
 .btn-gold:hover {
-  background: linear-gradient(180deg, #BF8F1F 0%, #A37414 100%);
+  background: linear-gradient(180deg, #BA8018 0%, #9C630D 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(184, 133, 27, 0.35);
+  box-shadow: 0 4px 12px rgba(175, 116, 20, 0.38);
 }
 
 .btn-ink {
-  background-color: #191713;
+  background-color: #1A1612;
   color: #FFFFFF;
   border-radius: 9999px;
   font-weight: 500;
@@ -58,7 +71,7 @@
 }
 
 .btn-ink:hover {
-  background-color: #312E29;
+  background-color: #312A22;
   transform: translateY(-1px);
 }
 

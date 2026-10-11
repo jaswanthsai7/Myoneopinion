@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Heart, Upload, Sparkles, Crown, ArrowUp, CheckCircle, BarChart3, Share2 } from "lucide-react";
-import { NavigationBar } from "@/components/navigation-bar";
+import { NavigationBar, NavTabs } from "@/components/navigation-bar";
 import { Footer } from "@/components/footer";
 import { PostOpinionDialog } from "@/components/post-opinion-dialog";
 import { BoostDialog } from "@/components/boost-dialog";
@@ -105,6 +105,9 @@ function TopLeaderboardPage() {
           </div>
 
           <div className="relative z-10 max-w-3xl mx-auto px-4">
+            {/* Navigation Tabs Above Headline */}
+            <NavTabs activeTab="top" />
+
             {/* Massive Editorial Headline */}
             <h1 className="font-editorial text-5xl md:text-7xl lg:text-8xl font-normal tracking-tight text-[#191713] drop-shadow-2xs">
               MYONEOPINION
@@ -123,8 +126,8 @@ function TopLeaderboardPage() {
                 return (
                   <div
                     key={op.id}
-                    className={`py-4 md:py-5 first:pt-2 last:pb-2 flex items-start gap-3 md:gap-5 transition-colors rounded-xl px-2 hover:bg-[#EAE0CD]/40 ${
-                      isFirst ? "bg-[#EAE0CD]/50 p-3.5 my-1" : ""
+                    className={`py-4 md:py-5 first:pt-2 last:pb-2 flex items-start gap-3 md:gap-5 transition-colors rounded-xl px-2 hover:bg-[#E5D6BA]/40 ${
+                      isFirst ? "bg-[#E5D6BA]/50 p-3.5 my-1" : ""
                     }`}
                   >
                     {/* Rank Badge */}
@@ -346,29 +349,29 @@ function TopLeaderboardPage() {
               </div>
 
               <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="p-2 rounded-xl bg-[#FAF6EE] border border-[#E8DCBE]">
-                  <div className="font-editorial text-base md:text-lg font-bold text-[#191713]">
+                <div className="p-2 rounded-xl bg-[#F6EEDA] border border-[#DEC9A8]">
+                  <div className="font-editorial text-base md:text-lg font-bold text-[#1A1612]">
                     {stats ? stats.opinionsPublished.toLocaleString() : "2,481,903"}
                   </div>
-                  <div className="text-[10px] text-[#777168] mt-0.5">
+                  <div className="text-[10px] text-[#746857] mt-0.5">
                     opinions published
                   </div>
                 </div>
 
-                <div className="p-2 rounded-xl bg-[#FAF6EE] border border-[#E8DCBE]">
+                <div className="p-2 rounded-xl bg-[#F6EEDA] border border-[#DEC9A8]">
                   <div className="font-editorial text-base md:text-lg font-bold text-red-700">
                     {stats ? stats.upvotes.toLocaleString() : "18,492,112"}
                   </div>
-                  <div className="text-[10px] text-[#777168] mt-0.5">
+                  <div className="text-[10px] text-[#746857] mt-0.5">
                     upvotes
                   </div>
                 </div>
 
-                <div className="p-2 rounded-xl bg-[#FAF6EE] border border-[#E8DCBE]">
-                  <div className="font-editorial text-base md:text-lg font-bold text-[#B8851B]">
+                <div className="p-2 rounded-xl bg-[#F6EEDA] border border-[#DEC9A8]">
+                  <div className="font-editorial text-base md:text-lg font-bold text-[#BD841A]">
                     {stats ? stats.boosts.toLocaleString() : "412,881"}
                   </div>
-                  <div className="text-[10px] text-[#777168] mt-0.5">
+                  <div className="text-[10px] text-[#746857] mt-0.5">
                     boosts
                   </div>
                 </div>

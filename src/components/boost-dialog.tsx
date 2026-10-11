@@ -42,18 +42,18 @@ export const BoostDialog: React.FC<BoostDialogProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md rounded-2xl bg-[#F8F5EE] border border-[#DECDB6] p-6 shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-md rounded-2xl bg-[#F3EBDD] border border-[#D7C29F] p-6 shadow-2xl overflow-hidden">
         {/* Top Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-[#E8DCBE]">
+        <div className="flex items-center justify-between pb-3 border-b border-[#DEC9A8]">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#EAE0CD] border border-[#DFCEB7] flex items-center justify-center text-[#B8851B]">
-              <Zap className="w-4 h-4 fill-[#D4A32A]" />
+            <div className="w-8 h-8 rounded-lg bg-[#E6D7BD] border border-[#D7C29F] flex items-center justify-center text-[#BD841A]">
+              <Zap className="w-4 h-4 fill-[#D49622]" />
             </div>
             <div>
-              <h2 className="font-editorial text-lg font-bold text-[#191713]">
+              <h2 className="font-editorial text-lg font-bold text-[#1A1612]">
                 Boost This Opinion
               </h2>
-              <p className="text-xs text-[#777168]">
+              <p className="text-xs text-[#746857]">
                 Help it rise to the permanent leaderboard
               </p>
             </div>
@@ -61,19 +61,19 @@ export const BoostDialog: React.FC<BoostDialogProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-[#777168] hover:text-[#191713] hover:bg-[#EFE3CF] transition-colors"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-[#746857] hover:text-[#1A1612] hover:bg-[#E6D7BD] transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Selected Opinion Preview */}
-        <div className="mt-4 p-3.5 rounded-xl bg-[#F3ECE0] border border-[#E2D5C1]">
-          <p className="text-xs text-[#777168] mb-1 font-medium">{opinion.authorName}</p>
-          <p className="font-editorial text-sm italic text-[#191713] leading-snug">
+        <div className="mt-4 p-3.5 rounded-xl bg-[#E8DCBE] border border-[#D8C3A0]">
+          <p className="text-xs text-[#746857] mb-1 font-medium">{opinion.authorName}</p>
+          <p className="font-editorial text-sm italic text-[#1A1612] leading-snug">
             "{opinion.text}"
           </p>
-          <div className="mt-2 text-[11px] text-[#8C8477] flex items-center gap-2">
+          <div className="mt-2 text-[11px] text-[#867966] flex items-center gap-2">
             <span>Currently: <strong>{opinion.hypePoints}</strong> / 1,000 pts</span>
             <span>·</span>
             <span>{opinion.supporterCount} supporters</span>
@@ -81,25 +81,25 @@ export const BoostDialog: React.FC<BoostDialogProps> = ({
         </div>
 
         {/* User Balance Breakdown */}
-        <div className="mt-4 p-3 rounded-xl bg-[#FAF6EE] border border-[#E8DCBE] flex justify-between items-center text-xs">
+        <div className="mt-4 p-3 rounded-xl bg-[#F6EEDA] border border-[#DEC9A8] flex justify-between items-center text-xs">
           <div>
-            <div className="text-[#777168]">Your Available Balance</div>
-            <div className="font-semibold text-[#191713] flex items-center gap-1.5 mt-0.5">
-              <Zap className="w-3.5 h-3.5 text-[#D4A32A] fill-[#D4A32A]" />
+            <div className="text-[#746857]">Your Available Balance</div>
+            <div className="font-semibold text-[#1A1612] flex items-center gap-1.5 mt-0.5">
+              <Zap className="w-3.5 h-3.5 text-[#D49622] fill-[#D49622]" />
               <span>{balance.freeBalance} free</span>
-              <span className="text-[#8C8477] font-normal">+</span>
+              <span className="text-[#867966] font-normal">+</span>
               <span>{balance.purchasedBalance} purchased</span>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-[11px] text-[#777168]">Total</div>
-            <div className="font-bold text-sm text-[#191713]">{totalBalance} pts</div>
+            <div className="text-[11px] text-[#746857]">Total</div>
+            <div className="font-bold text-sm text-[#1A1612]">{totalBalance} pts</div>
           </div>
         </div>
 
         {/* Amount Selector */}
         <div className="mt-4">
-          <label className="block text-xs font-medium text-[#5A554D] mb-2">
+          <label className="block text-xs font-medium text-[#564C3F] mb-2">
             Select Boost Amount (Hype Points):
           </label>
           <div className="grid grid-cols-4 gap-2">
@@ -110,8 +110,8 @@ export const BoostDialog: React.FC<BoostDialogProps> = ({
                 onClick={() => setSelectedAmount(amt)}
                 className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all ${
                   selectedAmount === amt
-                    ? 'bg-[#B8851B] text-white border-[#B8851B] shadow-xs scale-102'
-                    : 'bg-[#FAF6EE] text-[#191713] border-[#DECDB6] hover:bg-[#EFE4D2]'
+                    ? 'bg-[#BD841A] text-white border-[#BD841A] shadow-xs scale-102'
+                    : 'bg-[#F6EEDA] text-[#1A1612] border-[#D7C29F] hover:bg-[#EAE0CA]'
                 }`}
               >
                 ⚡ {amt}
@@ -139,7 +139,7 @@ export const BoostDialog: React.FC<BoostDialogProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-full border border-[#DFCEB7] bg-[#FAF6EE] text-xs font-medium text-[#191713] hover:bg-[#EFE3CF] transition-colors"
+            className="px-4 py-2 rounded-full border border-[#D7C29F] bg-[#F7EFE1] text-xs font-medium text-[#1A1612] hover:bg-[#E6D7BD] transition-colors"
           >
             Cancel
           </button>

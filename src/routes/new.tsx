@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Heart, MessageSquare, Zap, Users, Upload, MoreVertical, Sparkles, Radio } from "lucide-react";
-import { NavigationBar } from "@/components/navigation-bar";
+import { NavigationBar, NavTabs } from "@/components/navigation-bar";
 import { Footer } from "@/components/footer";
 import { PostOpinionDialog } from "@/components/post-opinion-dialog";
 import { BoostDialog } from "@/components/boost-dialog";
@@ -175,6 +175,9 @@ function NewFeedPage() {
           </div>
 
           <div className="relative z-10 max-w-3xl mx-auto px-4">
+            {/* Navigation Tabs Above Headline */}
+            <NavTabs activeTab="new" />
+
             {/* Massive Editorial Headline */}
             <h1 className="font-editorial text-5xl md:text-7xl lg:text-8xl font-normal tracking-tight text-[#191713] drop-shadow-2xs">
               NEW FEED
@@ -197,8 +200,8 @@ function NewFeedPage() {
                 onClick={() => setFilter(tab.id as any)}
                 className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
                   filter === tab.id
-                    ? "bg-[#B8851B] text-white shadow-xs"
-                    : "bg-[#EFE3CF] text-[#5A554D] hover:bg-[#EAE0CD] border border-[#DFCEB7]"
+                    ? "bg-[#BD841A] text-white shadow-xs"
+                    : "bg-[#E5D6BA] text-[#564C3F] hover:bg-[#DECDAE] border border-[#D7C29F]"
                 }`}
               >
                 {tab.label}
@@ -451,29 +454,29 @@ function NewFeedPage() {
               </div>
 
               <div className="grid grid-cols-3 gap-2 text-center">
-                <div className="p-2 rounded-xl bg-[#FAF6EE] border border-[#E8DCBE]">
-                  <div className="font-editorial text-base md:text-lg font-bold text-[#191713]">
+                <div className="p-2 rounded-xl bg-[#F6EEDA] border border-[#DEC9A8]">
+                  <div className="font-editorial text-base md:text-lg font-bold text-[#1A1612]">
                     {stats ? stats.newOpinionsToday.toLocaleString() : "2,481"}
                   </div>
-                  <div className="text-[10px] text-[#777168] mt-0.5">
+                  <div className="text-[10px] text-[#746857] mt-0.5">
                     new opinions today
                   </div>
                 </div>
 
-                <div className="p-2 rounded-xl bg-[#FAF6EE] border border-[#E8DCBE]">
+                <div className="p-2 rounded-xl bg-[#F6EEDA] border border-[#DEC9A8]">
                   <div className="font-editorial text-base md:text-lg font-bold text-red-700">
                     {stats ? stats.likesToday.toLocaleString() : "18,492"}
                   </div>
-                  <div className="text-[10px] text-[#777168] mt-0.5">
+                  <div className="text-[10px] text-[#746857] mt-0.5">
                     likes given
                   </div>
                 </div>
 
-                <div className="p-2 rounded-xl bg-[#FAF6EE] border border-[#E8DCBE]">
-                  <div className="font-editorial text-base md:text-lg font-bold text-[#B8851B]">
+                <div className="p-2 rounded-xl bg-[#F6EEDA] border border-[#DEC9A8]">
+                  <div className="font-editorial text-base md:text-lg font-bold text-[#BD841A]">
                     {stats ? stats.hypePointsUsed.toLocaleString() : "412,881"}
                   </div>
-                  <div className="text-[10px] text-[#777168] mt-0.5">
+                  <div className="text-[10px] text-[#746857] mt-0.5">
                     Hype Points used
                   </div>
                 </div>

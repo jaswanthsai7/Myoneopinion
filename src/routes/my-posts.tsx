@@ -12,7 +12,7 @@ import {
   ArrowDown,
   Sparkles,
 } from "lucide-react";
-import { NavigationBar } from "@/components/navigation-bar";
+import { NavigationBar, NavTabs } from "@/components/navigation-bar";
 import { Footer } from "@/components/footer";
 import { PostOpinionDialog } from "@/components/post-opinion-dialog";
 import { api, type UserProfile } from "@/lib/api-client";
@@ -148,6 +148,9 @@ function MyPostsPage() {
           </div>
 
           <div className="relative z-10 max-w-3xl mx-auto px-4">
+            {/* Navigation Tabs Above Headline */}
+            <NavTabs activeTab="my-posts" />
+
             {/* Massive Editorial Headline */}
             <h1 className="font-editorial text-5xl md:text-7xl lg:text-8xl font-normal tracking-tight text-[#191713] drop-shadow-2xs">
               MY POSTS
@@ -170,8 +173,8 @@ function MyPostsPage() {
                 onClick={() => setFilter(tab.id as any)}
                 className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
                   filter === tab.id
-                    ? "bg-[#B8851B] text-white shadow-xs"
-                    : "bg-[#EFE3CF] text-[#5A554D] hover:bg-[#EAE0CD] border border-[#DFCEB7]"
+                    ? "bg-[#BD841A] text-white shadow-xs"
+                    : "bg-[#E5D6BA] text-[#564C3F] hover:bg-[#DECDAE] border border-[#D7C29F]"
                 }`}
               >
                 {tab.label}
@@ -418,30 +421,30 @@ function MyPostsPage() {
               </div>
 
               <div className="grid grid-cols-2 gap-2.5">
-                <div className="p-3 rounded-xl bg-[#FAF6EE] border border-[#E8DCBE]">
-                  <div className="text-xs text-[#777168] mb-0.5">📊 Opinions posted</div>
-                  <div className="font-editorial text-lg font-bold text-[#191713]">
+                <div className="p-3 rounded-xl bg-[#F6EEDA] border border-[#DEC9A8]">
+                  <div className="text-xs text-[#746857] mb-0.5">📊 Opinions posted</div>
+                  <div className="font-editorial text-lg font-bold text-[#1A1612]">
                     {userStats?.publishedToday ?? 7} / 10
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#FAF6EE] border border-[#E8DCBE]">
-                  <div className="text-xs text-[#777168] mb-0.5">❤️ Total likes</div>
+                <div className="p-3 rounded-xl bg-[#F6EEDA] border border-[#DEC9A8]">
+                  <div className="text-xs text-[#746857] mb-0.5">❤️ Total likes</div>
                   <div className="font-editorial text-lg font-bold text-red-700">
                     {userStats?.totalLikes.toLocaleString() ?? "4,892"}
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#FAF6EE] border border-[#E8DCBE]">
-                  <div className="text-xs text-[#777168] mb-0.5">⚡ Hype Points</div>
-                  <div className="font-editorial text-lg font-bold text-[#B8851B]">
+                <div className="p-3 rounded-xl bg-[#F6EEDA] border border-[#DEC9A8]">
+                  <div className="text-xs text-[#746857] mb-0.5">⚡ Hype Points</div>
+                  <div className="font-editorial text-lg font-bold text-[#BD841A]">
                     {userStats?.totalHype.toLocaleString() ?? "3,920"}
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#FAF6EE] border border-[#E8DCBE]">
-                  <div className="text-xs text-[#777168] mb-0.5">🏆 On leaderboard</div>
-                  <div className="font-editorial text-lg font-bold text-[#191713]">
+                <div className="p-3 rounded-xl bg-[#F6EEDA] border border-[#DEC9A8]">
+                  <div className="text-xs text-[#746857] mb-0.5">🏆 On leaderboard</div>
+                  <div className="font-editorial text-lg font-bold text-[#1A1612]">
                     {userStats?.qualifiedCount ?? 3}
                   </div>
                 </div>

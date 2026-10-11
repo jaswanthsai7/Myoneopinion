@@ -47,7 +47,7 @@ export const PostOpinionDialog: React.FC<PostOpinionDialogProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg rounded-2xl bg-[#F8F5EE] border border-[#DECDB6] p-6 shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-lg rounded-2xl bg-[#F3EBDD] border border-[#D7C29F] p-6 shadow-2xl overflow-hidden">
         {/* Subtle decorative flower in top-right */}
         <img
           src={flowerImg}
@@ -55,16 +55,16 @@ export const PostOpinionDialog: React.FC<PostOpinionDialogProps> = ({
           className="absolute -top-10 -right-10 w-36 h-36 opacity-15 pointer-events-none object-contain"
         />
 
-        <div className="flex items-center justify-between pb-3 border-b border-[#E8DCBE]">
+        <div className="flex items-center justify-between pb-3 border-b border-[#DEC9A8]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#EFE3CF] border border-[#DECDB6] flex items-center justify-center p-1">
+            <div className="w-8 h-8 rounded-lg bg-[#E6D7BD] border border-[#D7C29F] flex items-center justify-center p-1">
               <img src={flowerImg} alt="" className="w-full h-full object-contain" />
             </div>
             <div>
-              <h2 className="font-editorial text-xl font-bold text-[#191713]">
+              <h2 className="font-editorial text-xl font-bold text-[#1A1612]">
                 Post Your One Opinion
               </h2>
-              <p className="text-xs text-[#777168]">
+              <p className="text-xs text-[#746857]">
                 Say it. Keep it forever. Immutable.
               </p>
             </div>
@@ -72,18 +72,18 @@ export const PostOpinionDialog: React.FC<PostOpinionDialogProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-[#777168] hover:text-[#191713] hover:bg-[#EFE3CF] transition-colors"
+            className="w-8 h-8 rounded-full flex items-center justify-center text-[#746857] hover:text-[#1A1612] hover:bg-[#E6D7BD] transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Daily limit badge */}
-        <div className="mt-4 flex items-center justify-between px-3 py-2 rounded-xl bg-[#EFE4D2]/70 border border-[#E0D1BB] text-xs">
-          <span className="text-[#5A554D]">
-            Daily allowance: <strong className="text-[#191713]">{postCountToday} / {maxDailyPosts}</strong> opinions used today
+        <div className="mt-4 flex items-center justify-between px-3 py-2 rounded-xl bg-[#E8DCBE]/70 border border-[#D7C29F] text-xs">
+          <span className="text-[#564C3F]">
+            Daily allowance: <strong className="text-[#1A1612]">{postCountToday} / {maxDailyPosts}</strong> opinions used today
           </span>
-          <span className="text-[11px] text-[#8C8477]">
+          <span className="text-[11px] text-[#867966]">
             Resets at 00:00 UTC
           </span>
         </div>
@@ -113,15 +113,15 @@ export const PostOpinionDialog: React.FC<PostOpinionDialogProps> = ({
               disabled={isLimitReached || loading}
               rows={4}
               maxLength={320}
-              className="w-full rounded-xl bg-white border border-[#DFCEB7] p-3.5 text-sm text-[#191713] placeholder-[#9E978C] focus:outline-hidden focus:ring-2 focus:ring-[#D4A32A] resize-none disabled:bg-[#F3ECE0] disabled:cursor-not-allowed"
+              className="w-full rounded-xl bg-white border border-[#D7C29F] p-3.5 text-sm text-[#1A1612] placeholder-[#948878] focus:outline-hidden focus:ring-2 focus:ring-[#BD841A] resize-none disabled:bg-[#ECE1CD] disabled:cursor-not-allowed"
             />
             <div className="flex justify-between items-center px-1 text-xs mt-1">
-              <span className="text-[#8C8477] text-[11px]">
+              <span className="text-[#867966] text-[11px]">
                 24 hours to reach 1,000 Hype Points for permanent leaderboard.
               </span>
               <span
                 className={`font-mono font-medium ${
-                  isOverLimit ? 'text-red-600 font-bold' : remaining < 20 ? 'text-amber-600' : 'text-[#8C8477]'
+                  isOverLimit ? 'text-red-600 font-bold' : remaining < 20 ? 'text-amber-600' : 'text-[#867966]'
                 }`}
               >
                 {charCount} / 280
@@ -134,14 +134,14 @@ export const PostOpinionDialog: React.FC<PostOpinionDialogProps> = ({
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2 rounded-full border border-[#DFCEB7] bg-[#FAF6EE] text-xs font-medium text-[#191713] hover:bg-[#EFE3CF] transition-colors"
+              className="px-4 py-2 rounded-full border border-[#D7C29F] bg-[#F7EFE1] text-xs font-medium text-[#1A1612] hover:bg-[#E6D7BD] transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={!text.trim() || isOverLimit || isLimitReached || loading}
-              className="flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#191713] text-white text-xs font-semibold hover:bg-[#312E29] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-xs"
+              className="flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#1A1612] text-white text-xs font-semibold hover:bg-[#312A22] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-xs"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#E8C94C]" />
               <span>{loading ? 'Publishing...' : 'Publish Opinion'}</span>
