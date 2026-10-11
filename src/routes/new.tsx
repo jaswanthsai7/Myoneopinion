@@ -166,7 +166,7 @@ function NewFeedPage() {
         {/* Botanical Hero Section */}
         <div className="relative pt-6 pb-12 text-center overflow-hidden">
           {/* Botanical Lily Artwork on Right */}
-          <div className="absolute top-0 right-2 md:right-12 w-48 md:w-72 pointer-events-none -z-0 opacity-90 drop-shadow-md">
+          <div className="absolute -top-2 right-0 md:right-6 w-44 md:w-64 pointer-events-none z-0 opacity-90 drop-shadow-md">
             <img
               src={lilyImg}
               alt=""
@@ -174,26 +174,7 @@ function NewFeedPage() {
             />
           </div>
 
-          <div className="relative z-10 max-w-4xl mx-auto">
-            {/* Left side text */}
-            <div className="hidden lg:block absolute left-4 top-1/2 -translate-y-1/2 text-left text-xs text-[#777168] max-w-[160px] leading-relaxed">
-              <span className="font-medium text-[#191713]">Fresh thoughts.</span>
-              <br />
-              Real people.
-              <br />
-              Limited time.
-              <div className="w-8 h-[1px] bg-[#DECDB6] my-2" />
-              <span className="text-[11px] text-[#8C8477]">Every opinion has 24 hours to make an impact.</span>
-            </div>
-
-            {/* Right side text */}
-            <div className="hidden lg:block absolute right-4 top-1/2 -translate-y-1/2 text-right text-xs text-[#777168] max-w-[160px] leading-relaxed">
-              <span className="font-medium text-[#191713]">A new perspective</span>
-              <br />
-              could change everything.
-              <div className="w-8 h-[1px] bg-[#DECDB6] my-2 ml-auto" />
-            </div>
-
+          <div className="relative z-10 max-w-3xl mx-auto px-4">
             {/* Massive Editorial Headline */}
             <h1 className="font-editorial text-5xl md:text-7xl lg:text-8xl font-normal tracking-tight text-[#191713] drop-shadow-2xs">
               NEW FEED
