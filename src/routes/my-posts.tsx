@@ -152,10 +152,6 @@ function MyPostsPage() {
             <h1 className="font-editorial text-5xl md:text-7xl lg:text-8xl font-normal tracking-tight text-[#191713] drop-shadow-2xs">
               MY POSTS
             </h1>
-
-            <p className="mt-2 text-xs md:text-sm font-semibold tracking-[0.35em] text-[#777168] uppercase">
-              S A M E &nbsp; T H O U G H T S . &nbsp; A &nbsp; B R I G H T E R &nbsp; T O M O R R O W .
-            </p>
           </div>
         </div>
 

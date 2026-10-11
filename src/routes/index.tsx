@@ -109,21 +109,6 @@ function TopLeaderboardPage() {
             <h1 className="font-editorial text-5xl md:text-7xl lg:text-8xl font-normal tracking-tight text-[#191713] drop-shadow-2xs">
               MYONEOPINION
             </h1>
-
-            <p className="mt-2 text-xs md:text-sm font-semibold tracking-[0.35em] text-[#777168] uppercase">
-              S A Y &nbsp; I T . &nbsp; K E E P &nbsp; I T &nbsp; F O R E V E R .
-            </p>
-
-            <div className="mt-6 flex justify-center">
-              <button
-                type="button"
-                onClick={() => setIsPostOpen(true)}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#191713] text-white text-xs md:text-sm font-semibold hover:bg-[#312E29] transition-all shadow-md hover:scale-105"
-              >
-                <Sparkles className="w-4 h-4 text-[#E8C94C]" />
-                <span>Post Your One Opinion</span>
-              </button>
-            </div>
           </div>
         </div>
 

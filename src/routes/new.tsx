@@ -179,10 +179,6 @@ function NewFeedPage() {
             <h1 className="font-editorial text-5xl md:text-7xl lg:text-8xl font-normal tracking-tight text-[#191713] drop-shadow-2xs">
               NEW FEED
             </h1>
-
-            <p className="mt-2 text-xs md:text-sm font-semibold tracking-[0.35em] text-[#777168] uppercase">
-              D I S C O V E R . &nbsp; S U P P O R T . &nbsp; M A K E &nbsp; I T &nbsp; R I S E .
-            </p>
           </div>
         </div>
 
