@@ -1,0 +1,69 @@
+/* Botanical Sanctuary & Editorial Global Leaderboard Theme */
+
+@layer utilities {
+  .font-editorial {
+    font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  }
+
+  .font-sans-ui {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+.botanical-bg {
+  background-color: #F8F5EE;
+  color: #191713;
+  min-height: 100vh;
+}
+
+.botanical-card {
+  background-color: #EFE4D2;
+  border: 1px solid #DFCEB7;
+  border-radius: 24px;
+}
+
+.botanical-card-inner {
+  background-color: #F9F6EF;
+  border: 1px solid #E8DCBE;
+  border-radius: 16px;
+}
+
+.botanical-sidebar-card {
+  background-color: #F5EDE0;
+  border: 1px solid #E5D7C2;
+  border-radius: 20px;
+}
+
+.btn-gold {
+  background: linear-gradient(180deg, #D4A32A 0%, #B8851B 100%);
+  color: #FFFFFF;
+  font-weight: 600;
+  border-radius: 9999px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 8px rgba(184, 133, 27, 0.25);
+}
+
+.btn-gold:hover {
+  background: linear-gradient(180deg, #BF8F1F 0%, #A37414 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(184, 133, 27, 0.35);
+}
+
+.btn-ink {
+  background-color: #191713;
+  color: #FFFFFF;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-ink:hover {
+  background-color: #312E29;
+  transform: translateY(-1px);
+}
+
+.circular-timer-circle {
+  transition: stroke-dashoffset 0.5s ease;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
