@@ -2,129 +2,78 @@
  * MyOneOpinion API Client
  */
 
-import type { Opinion, PlatformLiveStats, PointBalance } from './db';
+import type { CheckoutResponse, Opinion, OrderStatusResponse, Supporter } from "./spot-types";
 
-export interface UserProfile {
-  id: string;
-  displayName: string;
-  handle: string;
-  avatarUrl: string;
-  balance: PointBalance;
-  postCountToday: number;
-  maxDailyPosts: number;
+export class ApiError extends Error {}
+
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  let res: Response;
+  try {
+    res = await fetch(path, {
+      ...init,
+      headers: { "Content-Type": "application/json", ...init?.headers },
+    });
+  } catch {
+    throw new ApiError("Can't reach MyOneOpinion right now. Check your connection and try again.");
+  }
+  const json = (await res.json().catch(() => null)) as
+    { success: true; data: T } | { success: false; error?: string } | null;
+  if (!res.ok || !json || !json.success) {
+    throw new ApiError(
+      (json && !json.success && json.error) || "Something went wrong. Please try again.",
+    );
+  }
+  return json.data;
+}
+
+export interface OpinionPage {
+  opinion: Opinion;
+  supporters: Supporter[];
+  leader: Opinion | null;
 }
 
 export const api = {
-  async getTopOpinions(): Promise<{ opinions: Opinion[]; stats: PlatformLiveStats }> {
-    try {
-      const res = await fetch('/api/opinions/top');
-      if (!res.ok) throw new Error('Failed to load top opinions');
-      const json = await res.json();
-      return json.data;
-    } catch {
-      // Fallback
-      const { dbService } = await import('./db');
-      return dbService.getTopOpinions();
-    }
+  async listOpinions(sort: "top" | "new"): Promise<Opinion[]> {
+    const data = await request<{ opinions: Opinion[] }>(`/api/spot/opinions?sort=${sort}`);
+    return data.opinions;
   },
 
-  async getNewFeed(filter: 'all' | 'trending' | 'most_hype' | 'latest' = 'all'): Promise<{ opinions: Opinion[]; stats: PlatformLiveStats }> {
-    try {
-      const res = await fetch(`/api/opinions/new?filter=${filter}`);
-      if (!res.ok) throw new Error('Failed to load new feed');
-      const json = await res.json();
-      return json.data;
-    } catch {
-      const { dbService } = await import('./db');
-      return dbService.getNewFeedOpinions(filter);
-    }
+  getOpinion(id: string): Promise<OpinionPage> {
+    return request<OpinionPage>(`/api/spot/opinions/${encodeURIComponent(id)}`);
   },
 
-  async getMyPosts(filter: 'all' | 'active' | 'qualified' | 'expired' = 'all', sort: 'newest' | 'oldest' | 'highest_hype' = 'newest'): Promise<{ opinions: Opinion[]; userStats: any }> {
-    try {
-      const res = await fetch(`/api/opinions/my-posts?filter=${filter}&sort=${sort}`);
-      if (!res.ok) throw new Error('Failed to load my posts');
-      const json = await res.json();
-      return json.data;
-    } catch {
-      const { dbService } = await import('./db');
-      return dbService.getMyPosts('usr_demo_101', filter, sort);
-    }
+  startPostCheckout(input: {
+    name: string;
+    avatar: string | null;
+    text: string;
+    linkUrl: string | null;
+  }): Promise<CheckoutResponse> {
+    return request<CheckoutResponse>("/api/spot/checkout/post", {
+      method: "POST",
+      body: JSON.stringify(input),
+    });
   },
 
-  async createOpinion(text: string): Promise<{ success: boolean; opinion?: Opinion; error?: string }> {
-    try {
-      const res = await fetch('/api/opinions/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text }),
-      });
-      return await res.json();
-    } catch {
-      const { dbService } = await import('./db');
-      return dbService.createOpinion('usr_demo_101', text, '@alex');
-    }
+  startHypeCheckout(input: {
+    opinionId: string;
+    name: string;
+    avatar: string | null;
+    amountUsd: number;
+  }): Promise<CheckoutResponse> {
+    return request<CheckoutResponse>("/api/spot/checkout/hype", {
+      method: "POST",
+      body: JSON.stringify(input),
+    });
   },
 
-  async toggleLike(opinionId: string): Promise<{ success: boolean; liked: boolean; likeCount: number }> {
-    try {
-      const res = await fetch('/api/opinions/like', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ opinionId }),
-      });
-      return await res.json();
-    } catch {
-      const { dbService } = await import('./db');
-      return dbService.toggleLike('usr_demo_101', opinionId);
-    }
+  getOrder(orderId: string): Promise<OrderStatusResponse> {
+    return request<OrderStatusResponse>(`/api/spot/orders/${encodeURIComponent(orderId)}`);
   },
 
-  async boostOpinion(opinionId: string, amount = 10): Promise<{ success: boolean; opinion?: Opinion; balance?: PointBalance; error?: string }> {
-    try {
-      const res = await fetch('/api/opinions/boost', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ opinionId, amount }),
-      });
-      return await res.json();
-    } catch {
-      const { dbService } = await import('./db');
-      return dbService.boostOpinion('usr_demo_101', opinionId, amount, true);
-    }
-  },
-
-  async getUserMe(): Promise<UserProfile | null> {
-    try {
-      const res = await fetch('/api/user/me');
-      if (!res.ok) throw new Error('Failed to fetch user');
-      const json = await res.json();
-      return json.user;
-    } catch {
-      const { dbService } = await import('./db');
-      const balance = await dbService.getUserBalance('usr_demo_101');
-      const postCountToday = await dbService.getDailyPostCount('usr_demo_101');
-      return {
-        id: 'usr_demo_101',
-        displayName: 'Alex Rivers',
-        handle: '@alex',
-        avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80',
-        balance,
-        postCountToday,
-        maxDailyPosts: 10,
-      };
-    }
-  },
-
-  async getLiveStats(): Promise<PlatformLiveStats> {
-    try {
-      const res = await fetch('/api/stats/live');
-      if (!res.ok) throw new Error('Failed to fetch stats');
-      const json = await res.json();
-      return json.stats;
-    } catch {
-      const { dbService } = await import('./db');
-      return dbService.getLiveStats();
-    }
+  completeTestOrder(orderId: string): Promise<OrderStatusResponse> {
+    return request<OrderStatusResponse>(
+      `/api/spot/orders/${encodeURIComponent(orderId)}/test-complete`,
+      { method: "POST" },
+    );
   },
 };

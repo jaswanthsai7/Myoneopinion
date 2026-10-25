@@ -10,17 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as MyPostsRouteImport } from './routes/my-posts'
 import { Route as NewRouteImport } from './routes/new'
+import { Route as OIdRouteImport } from './routes/o.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MyPostsRoute = MyPostsRouteImport.update({
-  id: '/my-posts',
-  path: '/my-posts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NewRoute = NewRouteImport.update({
@@ -28,35 +23,40 @@ const NewRoute = NewRouteImport.update({
   path: '/new',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OIdRoute = OIdRouteImport.update({
+  id: '/o/$id',
+  path: '/o/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/my-posts': typeof MyPostsRoute
   '/new': typeof NewRoute
+  '/o/$id': typeof OIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/my-posts': typeof MyPostsRoute
   '/new': typeof NewRoute
+  '/o/$id': typeof OIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/my-posts': typeof MyPostsRoute
   '/new': typeof NewRoute
+  '/o/$id': typeof OIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/my-posts' | '/new'
+  fullPaths: '/' | '/new' | '/o/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/my-posts' | '/new'
-  id: '__root__' | '/' | '/my-posts' | '/new'
+  to: '/' | '/new' | '/o/$id'
+  id: '__root__' | '/' | '/new' | '/o/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  MyPostsRoute: typeof MyPostsRoute
   NewRoute: typeof NewRoute
+  OIdRoute: typeof OIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -68,13 +68,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/my-posts': {
-      id: '/my-posts'
-      path: '/my-posts'
-      fullPath: '/my-posts'
-      preLoaderRoute: typeof MyPostsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/new': {
       id: '/new'
       path: '/new'
@@ -82,13 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/o/$id': {
+      id: '/o/$id'
+      path: '/o/$id'
+      fullPath: '/o/$id'
+      preLoaderRoute: typeof OIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  MyPostsRoute: MyPostsRoute,
   NewRoute: NewRoute,
+  OIdRoute: OIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
