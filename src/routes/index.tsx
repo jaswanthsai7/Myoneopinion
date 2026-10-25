@@ -1,12 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { SiteHeader } from "@/components/spot/site-header";
+import { SiteHeader, SpotTabs } from "@/components/spot/site-header";
 import { SiteFooter } from "@/components/spot/site-footer";
-import { CrownSpot, OpinionRow } from "@/components/spot/opinion-cards";
+import { OpinionRow, SpotSidebarCard } from "@/components/spot/opinion-cards";
 import { HypeDialog } from "@/components/spot/hype-dialog";
 import { PostDialog } from "@/components/spot/post-dialog";
 import { api } from "@/lib/api-client";
 import type { Opinion } from "@/lib/db";
+import lilyImg from "@/assets/botanical-lily-transparent.png";
+import flowerImg from "@/assets/flower-canonical.png";
 import { POINTS_PER_DOLLAR, POST_PRICE_USD, STARTING_HYPE_POINTS, formatUsd } from "@/lib/pricing";
 
 export const Route = createFileRoute("/")({
@@ -57,61 +59,77 @@ function TopSpotPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const [leader, challenger, ...rest] = opinions;
+  const leader = opinions[0];
+
+  const handleToggleLike = async (target: Opinion) => {
+    const res = await api.toggleLike(target.id);
+    if (res.success) {
+      setOpinions((prev) =>
+        prev.map((op) =>
+          op.id === target.id ? { ...op, isLiked: res.liked, likeCount: res.likeCount } : op,
+        ),
+      );
+    }
+  };
 
   return (
-    <div className="spot-page">
-      <SiteHeader activeTab="top" onPost={() => setIsPostOpen(true)} />
+    <div className="spot-page botanical-bg selection:bg-[#E8C94C]/40">
+      <SiteHeader onPost={() => setIsPostOpen(true)} />
 
-      <main className="flex-1 max-w-[1120px] w-full mx-auto px-4 md:px-8 pt-10 md:pt-14">
-        <div className="text-center mb-8 md:mb-10">
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight">
-            One spot. <span className="text-gold-gradient">Outbid everyone.</span>
-          </h1>
-          <p className="mt-3 text-sm md:text-base text-[var(--spot-muted)]">
-            The opinion with the most Hype Points sits on top until someone hypes another past it.
-          </p>
+      <main className="flex-1 max-w-[1240px] w-full mx-auto px-4 md:px-8 py-8 md:py-12">
+        <div className="relative pt-2 pb-3 text-center overflow-hidden">
+          <div className="absolute -top-6 right-0 md:right-6 w-36 md:w-52 pointer-events-none z-0 opacity-85 drop-shadow-sm">
+            <img src={lilyImg} alt="" className="w-full h-auto object-contain rotate-6" />
+          </div>
+          <div className="relative z-10 max-w-3xl mx-auto px-4">
+            <h1 className="sr-only">MyOneOpinion: outbid everyone for the top spot</h1>
+            <SpotTabs activeTab="top" />
+          </div>
         </div>
 
-        {loading && <div className="spot-panel h-72 animate-pulse" aria-label="Loading" />}
-
-        {leader && <CrownSpot op={leader} challenger={challenger} onHype={setHypeTarget} />}
-
-        <section aria-label="How it works" className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-6">
-          {STEPS.map((step, idx) => (
-            <div key={step.title} className="spot-panel p-4 flex gap-3">
-              <span className="w-7 h-7 rounded-full bg-white/5 border border-[var(--spot-line)] text-xs font-semibold flex items-center justify-center shrink-0">
-                {idx + 1}
-              </span>
-              <div>
-                <h2 className="text-sm font-semibold">{step.title}</h2>
-                <p className="text-xs text-[var(--spot-muted)] mt-0.5 leading-relaxed">
-                  {step.desc}
-                </p>
-              </div>
-            </div>
-          ))}
-        </section>
-
-        {leader && challenger && (
-          <section aria-label="Challengers" className="mt-12">
-            <div className="flex items-end justify-between mb-4">
-              <h2 className="text-lg font-semibold">Challengers</h2>
-              <span className="text-xs text-[var(--spot-muted)]">Ranked by Hype Points</span>
-            </div>
-            <ol className="space-y-3">
-              {[challenger, ...rest].map((op, idx) => (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mt-4">
+          <div className="lg:col-span-8 botanical-card p-4 md:p-6 shadow-sm">
+            {loading && <div className="h-72 animate-pulse" aria-label="Loading" />}
+            <ol className="divide-y divide-[#E2D5C1]">
+              {opinions.map((op, idx) => (
                 <OpinionRow
                   key={op.id}
                   op={op}
-                  rank={idx + 2}
-                  leaderPoints={leader.hypePoints}
+                  rank={idx + 1}
+                  leaderPoints={leader?.hypePoints ?? 0}
                   onHype={setHypeTarget}
+                  onToggleLike={handleToggleLike}
                 />
               ))}
             </ol>
-          </section>
-        )}
+          </div>
+
+          <aside className="lg:col-span-4 space-y-6">
+            <SpotSidebarCard leader={leader} onPost={() => setIsPostOpen(true)} />
+
+            <section aria-label="How it works" className="botanical-sidebar-card p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-6 h-6 rounded-md bg-[#E8DCBE] flex items-center justify-center p-0.5">
+                  <img src={flowerImg} alt="" className="w-full h-full object-contain" />
+                </div>
+                <h2 className="font-editorial text-xl font-bold">How it works</h2>
+              </div>
+              <div className="space-y-4">
+                {STEPS.map((step, idx) => (
+                  <div key={step.title} className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-full bg-[#EAE0CD] text-[#5A554D] font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                      {idx + 1}
+                    </div>
+                    <div>
+                      <h3 className="text-xs font-semibold">{step.title}</h3>
+                      <p className="text-[11px] text-[#777168] leading-relaxed">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </aside>
+        </div>
       </main>
 
       <SiteFooter />

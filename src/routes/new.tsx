@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { SiteHeader } from "@/components/spot/site-header";
+import { SiteHeader, SpotTabs } from "@/components/spot/site-header";
+import lilyImg from "@/assets/botanical-lily-transparent.png";
 import { SiteFooter } from "@/components/spot/site-footer";
 import { OpinionRow } from "@/components/spot/opinion-cards";
 import { HypeDialog } from "@/components/spot/hype-dialog";
@@ -38,23 +39,40 @@ function NewOpinionsPage() {
   }, []);
 
   const leader = ranked[0] ?? null;
+
+  const handleToggleLike = async (target: Opinion) => {
+    const res = await api.toggleLike(target.id);
+    if (res.success) {
+      setRanked((prev) =>
+        prev.map((op) =>
+          op.id === target.id ? { ...op, isLiked: res.liked, likeCount: res.likeCount } : op,
+        ),
+      );
+    }
+  };
   const latest = [...ranked].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 
   return (
-    <div className="spot-page">
-      <SiteHeader activeTab="new" onPost={() => setIsPostOpen(true)} />
+    <div className="spot-page botanical-bg">
+      <SiteHeader onPost={() => setIsPostOpen(true)} />
 
-      <main className="flex-1 max-w-[880px] w-full mx-auto px-4 md:px-8 pt-10 md:pt-14">
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">New opinions</h1>
-        <p className="mt-2 mb-8 text-sm text-[var(--spot-muted)]">
-          Fresh posts, newest first. Hype one past the leader to give it the top spot.
-        </p>
+      <main className="flex-1 max-w-[960px] w-full mx-auto px-4 md:px-8 py-8 md:py-12">
+        <div className="relative pt-2 pb-6 text-center overflow-hidden">
+          <div className="absolute -top-6 right-0 w-32 md:w-44 pointer-events-none z-0 opacity-85">
+            <img src={lilyImg} alt="" className="w-full h-auto object-contain rotate-6" />
+          </div>
+          <h1 className="sr-only">New opinions</h1>
+          <SpotTabs activeTab="new" />
+          <p className="relative z-10 text-sm text-[var(--spot-muted)]">
+            Fresh posts, newest first. Hype one past the leader to give it the top spot.
+          </p>
+        </div>
 
-        {loading && <div className="spot-panel h-40 animate-pulse" aria-label="Loading" />}
+        {loading && <div className="botanical-card h-40 animate-pulse" aria-label="Loading" />}
 
-        <ol className="space-y-3">
+        <ol className="botanical-card p-4 md:p-6 shadow-sm divide-y divide-[#E2D5C1]">
           {latest.map((op) => (
             <OpinionRow
               key={op.id}
@@ -62,6 +80,7 @@ function NewOpinionsPage() {
               rank={ranked.indexOf(op) + 1}
               leaderPoints={leader?.hypePoints ?? 0}
               onHype={setHypeTarget}
+              onToggleLike={handleToggleLike}
             />
           ))}
         </ol>

@@ -8,7 +8,7 @@ export function SiteFooter() {
           Posting costs {formatUsd(POST_PRICE_USD)} and includes {STARTING_HYPE_POINTS} Hype Points
           · $1 = {POINTS_PER_DOLLAR} Hype Points
         </p>
-        <p>© 2026 MyOneOpinion · myoneopinion.com</p>
+        <p>© 2026 MyOneOpinion · One opinion. Forever.</p>
       </div>
     </footer>
   );

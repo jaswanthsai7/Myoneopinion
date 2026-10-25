@@ -17,14 +17,14 @@ export function OpinionAvatar({ src, name, className = "w-10 h-10" }: OpinionAva
         src={src}
         alt={name}
         onError={() => setFailed(true)}
-        className={`${className} rounded-full object-cover border border-white/10 shrink-0`}
+        className={`${className} rounded-full object-cover border border-[var(--spot-line-strong)] shrink-0`}
       />
     );
   }
 
   return (
     <div
-      className={`${className} rounded-full bg-[var(--spot-surface-2)] border border-white/10 shrink-0 flex items-center justify-center p-1.5`}
+      className={`${className} rounded-full bg-[var(--spot-surface-2)] border border-[var(--spot-line-strong)] shrink-0 flex items-center justify-center p-1.5`}
       aria-label={name}
     >
       <img src={flowerImg} alt="" className="w-full h-full object-contain" />

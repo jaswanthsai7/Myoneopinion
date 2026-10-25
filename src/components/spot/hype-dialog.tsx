@@ -84,7 +84,7 @@ export function HypeDialog({ opinion, leader, onClose }: HypeDialogProps) {
                   className={`rounded-2xl border py-3 text-center transition-colors ${
                     !custom && amount === preset
                       ? "border-[var(--spot-gold)] bg-[var(--spot-gold)]/10"
-                      : "border-[var(--spot-line-strong)] hover:bg-white/5"
+                      : "border-[var(--spot-line-strong)] hover:bg-[var(--spot-surface-2)]"
                   }`}
                 >
                   <div className="text-sm font-semibold">{formatUsd(preset)}</div>

@@ -78,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { name: "theme-color", content: "#09090b" },
+      { name: "theme-color", content: "#F3EBDD" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
       { title: "MyOneOpinion — One opinion. Forever." },
       {
@@ -94,7 +94,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap",
       },
       {
         rel: "stylesheet",
@@ -115,11 +115,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" style={{ backgroundColor: "#09090b" }}>
+    <html lang="en" style={{ backgroundColor: "#F3EBDD" }}>
       <head>
         <HeadContent />
       </head>
-      <body style={{ backgroundColor: "#09090b" }}>
+      <body style={{ backgroundColor: "#F3EBDD" }}>
         {children}
         <Scripts />
       </body>
