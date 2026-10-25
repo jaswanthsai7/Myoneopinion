@@ -1,0 +1,170 @@
+/* MyOneOpinion "Spot" theme: dark, premium, one gold accent reserved for Hype. */
+
+:root {
+  --spot-bg: #09090b;
+  --spot-surface: #131316;
+  --spot-surface-2: #1b1b20;
+  --spot-line: rgba(255, 255, 255, 0.08);
+  --spot-line-strong: rgba(255, 255, 255, 0.16);
+  --spot-text: #f4f4f5;
+  --spot-muted: #a1a1aa;
+  --spot-faint: #71717a;
+  --spot-gold: #f5c451;
+  --spot-gold-deep: #e0952b;
+  --spot-gold-ink: #1a1204;
+}
+
+html,
+body {
+  background-color: var(--spot-bg);
+  color: var(--spot-text);
+}
+
+@layer utilities {
+  .font-ui {
+    font-family:
+      "Inter",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+  }
+
+  .font-quote {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .text-gold-gradient {
+    background: linear-gradient(135deg, var(--spot-gold), var(--spot-gold-deep));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+.spot-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(80rem 36rem at 50% -12rem, rgba(245, 196, 81, 0.1), transparent 70%),
+    var(--spot-bg);
+  color: var(--spot-text);
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+.spot-panel {
+  background: var(--spot-surface);
+  border: 1px solid var(--spot-line);
+  border-radius: 20px;
+}
+
+.spot-crown-card {
+  position: relative;
+  border-radius: 28px;
+  padding: 1px;
+  background: linear-gradient(
+    140deg,
+    rgba(245, 196, 81, 0.7),
+    rgba(245, 196, 81, 0.08) 40%,
+    rgba(255, 255, 255, 0.06) 70%,
+    rgba(224, 149, 43, 0.5)
+  );
+  box-shadow: 0 30px 80px -30px rgba(245, 196, 81, 0.25);
+}
+
+.spot-crown-inner {
+  position: relative;
+  border-radius: 27px;
+  background:
+    radial-gradient(40rem 20rem at 0% 0%, rgba(245, 196, 81, 0.08), transparent 60%),
+    var(--spot-surface);
+}
+
+.btn-hype {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  font-weight: 600;
+  color: var(--spot-gold-ink);
+  background: linear-gradient(135deg, var(--spot-gold), var(--spot-gold-deep));
+  box-shadow:
+    0 8px 24px -10px rgba(245, 196, 81, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition:
+    transform 150ms ease,
+    filter 150ms ease;
+}
+
+.btn-hype:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.btn-hype:disabled {
+  opacity: 0.5;
+  transform: none;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  font-weight: 500;
+  color: var(--spot-text);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--spot-line-strong);
+  transition: background 150ms ease;
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.spot-input {
+  width: 100%;
+  border-radius: 14px;
+  background: var(--spot-bg);
+  border: 1px solid var(--spot-line-strong);
+  color: var(--spot-text);
+  padding: 0.7rem 0.9rem;
+  font-size: 0.9rem;
+  outline: none;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.spot-input::placeholder {
+  color: var(--spot-faint);
+}
+
+.spot-input:focus {
+  border-color: rgba(245, 196, 81, 0.6);
+  box-shadow: 0 0 0 3px rgba(245, 196, 81, 0.15);
+}
+
+.spot-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--spot-muted);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--spot-line);
+}

@@ -24,6 +24,8 @@ export interface Opinion {
   createdAt: string;
   expiresAt: string;
   qualifiedAt?: string | null;
+  linkUrl?: string | null;
+  isSample?: boolean;
   rank?: number | null;
   rankChange?: number;
   isLiked?: boolean;
@@ -229,6 +231,7 @@ class MemoryDbStore {
         authorName: '@kindmind',
         authorAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&auto=format&fit=crop&q=80',
         text: 'Mental health matters more than your productivity.',
+        linkUrl: 'https://www.who.int/health-topics/mental-health',
         status: 'PERMANENT' as const,
         hypePoints: 76,
         likeCount: 18903,
@@ -258,7 +261,7 @@ class MemoryDbStore {
     ];
 
     for (const item of topSeedList) {
-      this.opinions.set(item.id, item);
+      this.opinions.set(item.id, { ...item, isSample: true });
     }
 
     // Seed New Feed active opinions matching Reference Image 2
@@ -282,6 +285,7 @@ class MemoryDbStore {
         authorName: '@wanderer',
         authorAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&auto=format&fit=crop&q=80',
         text: 'We spend too much time on screens and not enough time with people who matter.',
+        linkUrl: 'https://en.wikipedia.org/wiki/Digital_detox',
         status: 'PENDING' as const,
         hypePoints: 310,
         likeCount: 98,
@@ -357,115 +361,7 @@ class MemoryDbStore {
     ];
 
     for (const item of newSeedList) {
-      this.opinions.set(item.id, item);
-    }
-
-    // Seed My Posts opinions matching Reference Image 3 for demo user
-    const myPostsSeedList = [
-      {
-        id: 'op_my_1',
-        authorId: demoUser.id,
-        authorName: '@alex',
-        authorAvatar: demoUser.avatarUrl!,
-        text: 'Happiness isn\'t a destination. It\'s a decision you make every single day.',
-        status: 'PENDING' as const,
-        hypePoints: 420,
-        likeCount: 124,
-        supporterCount: 56,
-        createdAt: '2026-10-26T14:14:00Z',
-        expiresAt: new Date(Date.now() + (23 * 3600000 + 48 * 60000)).toISOString(),
-      },
-      {
-        id: 'op_my_2',
-        authorId: demoUser.id,
-        authorName: '@alex',
-        authorAvatar: demoUser.avatarUrl!,
-        text: 'We spend too much time on screens and not enough time with people who matter.',
-        status: 'PENDING' as const,
-        hypePoints: 310,
-        likeCount: 98,
-        supporterCount: 42,
-        createdAt: '2026-10-26T11:36:00Z',
-        expiresAt: new Date(Date.now() + (22 * 3600000 + 12 * 60000)).toISOString(),
-      },
-      {
-        id: 'op_my_3',
-        authorId: demoUser.id,
-        authorName: '@alex',
-        authorAvatar: demoUser.avatarUrl!,
-        text: 'Success is not about being the best. It\'s about being a little better than yesterday.',
-        status: 'QUALIFIED' as const,
-        hypePoints: 1120,
-        likeCount: 1248,
-        supporterCount: 342,
-        createdAt: '2026-10-25T21:18:00Z',
-        expiresAt: '2026-10-26T21:18:00Z',
-        qualifiedAt: '2026-10-26T08:00:00Z',
-        rank: 12,
-        rankChange: 5,
-      },
-      {
-        id: 'op_my_4',
-        authorId: demoUser.id,
-        authorName: '@alex',
-        authorAvatar: demoUser.avatarUrl!,
-        text: 'It\'s okay to outgrow people, places, and habits that no longer feel right.',
-        status: 'QUALIFIED' as const,
-        hypePoints: 980,
-        likeCount: 832,
-        supporterCount: 210,
-        createdAt: '2026-10-25T18:40:00Z',
-        expiresAt: '2026-10-26T18:40:00Z',
-        qualifiedAt: '2026-10-26T06:00:00Z',
-        rank: 28,
-        rankChange: -12,
-      },
-      {
-        id: 'op_my_5',
-        authorId: demoUser.id,
-        authorName: '@alex',
-        authorAvatar: demoUser.avatarUrl!,
-        text: 'Money can buy comfort, but it can\'t buy peace.',
-        status: 'EXPIRED' as const,
-        hypePoints: 520,
-        likeCount: 412,
-        supporterCount: 86,
-        createdAt: '2026-10-24T16:12:00Z',
-        expiresAt: '2026-10-25T16:12:00Z',
-      },
-      {
-        id: 'op_my_6',
-        authorId: demoUser.id,
-        authorName: '@alex',
-        authorAvatar: demoUser.avatarUrl!,
-        text: 'Sometimes the bravest thing you can do is start over.',
-        status: 'EXPIRED' as const,
-        hypePoints: 410,
-        likeCount: 298,
-        supporterCount: 64,
-        createdAt: '2026-10-24T13:05:00Z',
-        expiresAt: '2026-10-25T13:05:00Z',
-      },
-      {
-        id: 'op_my_7',
-        authorId: demoUser.id,
-        authorName: '@alex',
-        authorAvatar: demoUser.avatarUrl!,
-        text: 'A kinder world begins with a kinder you.',
-        status: 'QUALIFIED' as const,
-        hypePoints: 1680,
-        likeCount: 2804,
-        supporterCount: 420,
-        createdAt: '2026-10-23T21:22:00Z',
-        expiresAt: '2026-10-24T21:22:00Z',
-        qualifiedAt: '2026-10-24T12:00:00Z',
-        rank: 5,
-        rankChange: 8,
-      },
-    ];
-
-    for (const item of myPostsSeedList) {
-      this.opinions.set(item.id, item);
+      this.opinions.set(item.id, { ...item, isSample: true });
     }
   }
 }
@@ -644,9 +540,10 @@ export class OpinionDatabase {
   async getTopOpinions(limit = 100, currentUserId?: string): Promise<{ opinions: Opinion[]; stats: PlatformLiveStats }> {
     evaluateExpirations(Array.from(memoryDb.opinions.values()));
 
+    // The opinion with the most Hype Points holds the spot until another overtakes it.
     const qualified = Array.from(memoryDb.opinions.values())
-      .filter((o) => o.status === 'PERMANENT' || o.status === 'QUALIFIED')
-      .sort((a, b) => (b.hypePoints + b.likeCount * 0.1) - (a.hypePoints + a.likeCount * 0.1))
+      .filter((o) => o.status !== 'MODERATED')
+      .sort((a, b) => b.hypePoints - a.hypePoints)
       .slice(0, limit);
 
     // Attach ranks

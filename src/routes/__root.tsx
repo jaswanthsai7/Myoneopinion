@@ -78,10 +78,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { name: "theme-color", content: "#F3EBDD" },
+      { name: "theme-color", content: "#09090b" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
       { title: "MyOneOpinion — One opinion. Forever." },
-      { name: "description", content: "Everyone gets one opinion. Say it. Leave it. Forever." },
+      {
+        name: "description",
+        content: "Post an opinion, hype the ones you love, and outbid everyone for the top spot.",
+      },
       { property: "og:title", content: "MyOneOpinion" },
       { property: "og:description", content: "One opinion. One chance to say something." },
       { property: "og:type", content: "website" },
@@ -89,7 +92,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap",
+      },
       {
         rel: "stylesheet",
         href: appCss,
@@ -109,11 +115,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" style={{ backgroundColor: '#F3EBDD' }}>
+    <html lang="en" style={{ backgroundColor: "#09090b" }}>
       <head>
         <HeadContent />
       </head>
-      <body style={{ backgroundColor: '#F3EBDD' }}>
+      <body style={{ backgroundColor: "#09090b" }}>
         {children}
         <Scripts />
       </body>
