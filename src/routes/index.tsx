@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SiteHeader, SpotTabs } from "@/components/spot/site-header";
 import { SiteFooter } from "@/components/spot/site-footer";
-import { OpinionRow, SpotSidebarCard } from "@/components/spot/opinion-cards";
+import { EmptySpot, OpinionRow, SpotSidebarCard } from "@/components/spot/opinion-cards";
 import { HypeDialog } from "@/components/spot/hype-dialog";
 import { PostDialog } from "@/components/spot/post-dialog";
-import { api } from "@/lib/api-client";
-import type { Opinion } from "@/lib/db";
+import { useOpinions } from "@/hooks/use-opinions";
+import type { Opinion } from "@/lib/spot-types";
 import lilyImg from "@/assets/botanical-lily-transparent.png";
 import flowerImg from "@/assets/flower-canonical.png";
 import { POINTS_PER_DOLLAR, POST_PRICE_USD, STARTING_HYPE_POINTS, formatUsd } from "@/lib/pricing";
@@ -46,31 +46,11 @@ const STEPS = [
 ];
 
 function TopSpotPage() {
-  const [opinions, setOpinions] = useState<Opinion[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { opinions, loading, error, reload } = useOpinions("top");
   const [isPostOpen, setIsPostOpen] = useState(false);
   const [hypeTarget, setHypeTarget] = useState<Opinion | null>(null);
 
-  useEffect(() => {
-    api
-      .getTopOpinions()
-      .then((data) => setOpinions(data.opinions))
-      .catch((err) => console.error("Failed to load the top spot", err))
-      .finally(() => setLoading(false));
-  }, []);
-
   const leader = opinions[0];
-
-  const handleToggleLike = async (target: Opinion) => {
-    const res = await api.toggleLike(target.id);
-    if (res.success) {
-      setOpinions((prev) =>
-        prev.map((op) =>
-          op.id === target.id ? { ...op, isLiked: res.liked, likeCount: res.likeCount } : op,
-        ),
-      );
-    }
-  };
 
   return (
     <div className="spot-page botanical-bg selection:bg-[#E8C94C]/40">
@@ -90,6 +70,10 @@ function TopSpotPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mt-4">
           <div className="lg:col-span-8 botanical-card p-4 md:p-6 shadow-sm">
             {loading && <div className="h-72 animate-pulse" aria-label="Loading" />}
+            {error && <p className="text-sm text-red-700 p-4">{error}</p>}
+            {!loading && !error && opinions.length === 0 && (
+              <EmptySpot onPost={() => setIsPostOpen(true)} />
+            )}
             <ol className="divide-y divide-[#E2D5C1]">
               {opinions.map((op, idx) => (
                 <OpinionRow
@@ -98,7 +82,6 @@ function TopSpotPage() {
                   rank={idx + 1}
                   leaderPoints={leader?.hypePoints ?? 0}
                   onHype={setHypeTarget}
-                  onToggleLike={handleToggleLike}
                 />
               ))}
             </ol>
@@ -134,11 +117,16 @@ function TopSpotPage() {
 
       <SiteFooter />
 
-      <PostDialog isOpen={isPostOpen} onClose={() => setIsPostOpen(false)} />
+      <PostDialog
+        isOpen={isPostOpen}
+        onClose={() => setIsPostOpen(false)}
+        onPublished={() => void reload()}
+      />
       <HypeDialog
         opinion={hypeTarget}
         leader={leader ?? null}
         onClose={() => setHypeTarget(null)}
+        onHyped={() => void reload()}
       />
     </div>
   );

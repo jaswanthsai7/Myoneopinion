@@ -2,6 +2,7 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import { handleSpotApi } from "./server/spot-api";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -246,136 +247,15 @@ export default {
         }
       }
 
-      // MyOneOpinion APIs
-      const d1 = getD1Binding(request, env);
-      const authHeader = request.headers.get("x-user-id") || request.headers.get("authorization")?.replace("Bearer ", "") || "usr_demo_101";
-
-      if (url.pathname === "/api/opinions/top" && request.method === "GET") {
-        const { dbService } = await import("./lib/db");
-        const data = await dbService.getTopOpinions(100, authHeader);
-        return applySecurityHeaders(
-          new Response(JSON.stringify({ success: true, data }), {
-            status: 200,
-            headers: { "content-type": "application/json" },
-          })
-        );
-      }
-
-      if (url.pathname === "/api/opinions/new" && request.method === "GET") {
-        const filter = (url.searchParams.get("filter") || "all") as any;
-        const { dbService } = await import("./lib/db");
-        const data = await dbService.getNewFeedOpinions(filter, authHeader);
-        return applySecurityHeaders(
-          new Response(JSON.stringify({ success: true, data }), {
-            status: 200,
-            headers: { "content-type": "application/json" },
-          })
-        );
-      }
-
-      if (url.pathname === "/api/opinions/my-posts" && request.method === "GET") {
-        const filter = (url.searchParams.get("filter") || "all") as any;
-        const sort = (url.searchParams.get("sort") || "newest") as any;
-        const { dbService } = await import("./lib/db");
-        const data = await dbService.getMyPosts(authHeader, filter, sort);
-        return applySecurityHeaders(
-          new Response(JSON.stringify({ success: true, data }), {
-            status: 200,
-            headers: { "content-type": "application/json" },
-          })
-        );
-      }
-
-      if (url.pathname === "/api/opinions/create" && request.method === "POST") {
-        const clientIp = getClientIp(request);
-        const rateCheck = checkRateLimit(`post_${clientIp}`, 15, 60000);
-        if (!rateCheck.allowed) {
-          return applySecurityHeaders(
-            new Response(
-              JSON.stringify({ success: false, error: "Rate limit exceeded. Please wait a moment." }),
-              { status: 429, headers: { "content-type": "application/json" } }
-            )
-          );
-        }
-
-        const body = (await request.json().catch(() => ({}))) as { text?: string; authorName?: string; authorAvatar?: string };
-        const { dbService } = await import("./lib/db");
-        const res = await dbService.createOpinion(authHeader, body.text || "", body.authorName, body.authorAvatar);
-        return applySecurityHeaders(
-          new Response(JSON.stringify(res), {
-            status: res.success ? 201 : 400,
-            headers: { "content-type": "application/json" },
-          })
-        );
-      }
-
-      if (url.pathname === "/api/opinions/like" && request.method === "POST") {
-        const body = (await request.json().catch(() => ({}))) as { opinionId?: string };
-        if (!body.opinionId) {
-          return applySecurityHeaders(
-            new Response(JSON.stringify({ success: false, error: "opinionId required" }), { status: 400, headers: { "content-type": "application/json" } })
-          );
-        }
-        const { dbService } = await import("./lib/db");
-        const res = await dbService.toggleLike(authHeader, body.opinionId);
-        return applySecurityHeaders(
-          new Response(JSON.stringify(res), {
-            status: res.success ? 200 : 400,
-            headers: { "content-type": "application/json" },
-          })
-        );
-      }
-
-      if (url.pathname === "/api/opinions/boost" && request.method === "POST") {
-        const body = (await request.json().catch(() => ({}))) as { opinionId?: string; amount?: number };
-        if (!body.opinionId) {
-          return applySecurityHeaders(
-            new Response(JSON.stringify({ success: false, error: "opinionId required" }), { status: 400, headers: { "content-type": "application/json" } })
-          );
-        }
-        const { dbService } = await import("./lib/db");
-        const res = await dbService.boostOpinion(authHeader, body.opinionId, body.amount || 10, true);
-        return applySecurityHeaders(
-          new Response(JSON.stringify(res), {
-            status: res.success ? 200 : 400,
-            headers: { "content-type": "application/json" },
-          })
-        );
-      }
-
-      if (url.pathname === "/api/user/me" && request.method === "GET") {
-        const { dbService } = await import("./lib/db");
-        const balance = await dbService.getUserBalance(authHeader);
-        const postCountToday = await dbService.getDailyPostCount(authHeader);
-        return applySecurityHeaders(
-          new Response(
-            JSON.stringify({
-              success: true,
-              user: {
-                id: authHeader,
-                displayName: "Alex Rivers",
-                handle: "@alex",
-                avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80",
-                balance,
-                postCountToday,
-                maxDailyPosts: 10,
-              },
-            }),
-            { status: 200, headers: { "content-type": "application/json" } }
-          )
-        );
-      }
-
-      if (url.pathname === "/api/stats/live" && request.method === "GET") {
-        const { dbService } = await import("./lib/db");
-        const stats = dbService.getLiveStats();
-        return applySecurityHeaders(
-          new Response(JSON.stringify({ success: true, stats }), {
-            status: 200,
-            headers: { "content-type": "application/json" },
-          })
-        );
-      }
+      // MyOneOpinion spot API (opinions, hypes, checkout orders)
+      const spotResponse = await handleSpotApi(
+        request,
+        env,
+        getD1Binding(request, env),
+        getClientIp(request),
+        (key, max, windowMs) => checkRateLimit(key, max, windowMs).allowed,
+      );
+      if (spotResponse) return applySecurityHeaders(spotResponse);
 
       // 2. Early Access Subscribe Endpoint
       const isSubscribePath = ["/api/subscribe", "/api/v1/subscribe", "/subscribe"].includes(url.pathname);

@@ -10,4 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Keep the public MyOneOpinion experience at the index route, with shared visual roles in the global design system, so the feed remains the first screen.
-- Until live accounts and payments are connected, identify sample messages and keep publishing and boosting as clearly labeled previews; never simulate successful account creation or payments.
+- There are no accounts: people post and hype with a name and optional photo. Nothing is published or hyped until the server marks its order paid. Until Paddle is connected, production leaves PAYMENTS_MODE unset so checkout stays a clearly labeled preview; PAYMENTS_MODE=test (no charge) is for local dev and staging only. Never simulate a successful real payment. Sample opinions exist only in the local in-memory store and are labeled.

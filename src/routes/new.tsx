@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SiteHeader, SpotTabs } from "@/components/spot/site-header";
 import lilyImg from "@/assets/botanical-lily-transparent.png";
 import { SiteFooter } from "@/components/spot/site-footer";
 import { OpinionRow } from "@/components/spot/opinion-cards";
 import { HypeDialog } from "@/components/spot/hype-dialog";
 import { PostDialog } from "@/components/spot/post-dialog";
-import { api } from "@/lib/api-client";
-import type { Opinion } from "@/lib/db";
+import { useOpinions } from "@/hooks/use-opinions";
+import type { Opinion } from "@/lib/spot-types";
 
 export const Route = createFileRoute("/new")({
   head: () => ({
@@ -24,35 +24,17 @@ export const Route = createFileRoute("/new")({
 });
 
 function NewOpinionsPage() {
-  // Ranked by Hype Points, as the server returns them; index + 1 is the rank.
-  const [ranked, setRanked] = useState<Opinion[]>([]);
-  const [loading, setLoading] = useState(true);
+  const latest = useOpinions("new");
+  const top = useOpinions("top");
   const [isPostOpen, setIsPostOpen] = useState(false);
   const [hypeTarget, setHypeTarget] = useState<Opinion | null>(null);
 
-  useEffect(() => {
-    api
-      .getTopOpinions()
-      .then((data) => setRanked(data.opinions))
-      .catch((err) => console.error("Failed to load new opinions", err))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const leader = ranked[0] ?? null;
-
-  const handleToggleLike = async (target: Opinion) => {
-    const res = await api.toggleLike(target.id);
-    if (res.success) {
-      setRanked((prev) =>
-        prev.map((op) =>
-          op.id === target.id ? { ...op, isLiked: res.liked, likeCount: res.likeCount } : op,
-        ),
-      );
-    }
+  const leader = top.opinions[0] ?? null;
+  const rankOf = new Map(top.opinions.map((op, idx) => [op.id, idx + 1]));
+  const reload = () => {
+    void latest.reload();
+    void top.reload();
   };
-  const latest = [...ranked].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  );
 
   return (
     <div className="spot-page botanical-bg">
@@ -70,17 +52,27 @@ function NewOpinionsPage() {
           </p>
         </div>
 
-        {loading && <div className="botanical-card h-40 animate-pulse" aria-label="Loading" />}
+        {latest.loading && (
+          <div className="botanical-card h-40 animate-pulse" aria-label="Loading" />
+        )}
+        {latest.error && <p className="text-sm text-red-700 py-4">{latest.error}</p>}
+        {!latest.loading && !latest.error && latest.opinions.length === 0 && (
+          <p className="text-sm text-[var(--spot-muted)] py-4 text-center">
+            No opinions yet. Post the first one.
+          </p>
+        )}
 
-        <ol className="botanical-card p-4 md:p-6 shadow-sm divide-y divide-[#E2D5C1]">
-          {latest.map((op) => (
+        <ol
+          hidden={latest.opinions.length === 0}
+          className="botanical-card p-4 md:p-6 shadow-sm divide-y divide-[#E2D5C1]"
+        >
+          {latest.opinions.map((op) => (
             <OpinionRow
               key={op.id}
               op={op}
-              rank={ranked.indexOf(op) + 1}
+              rank={rankOf.get(op.id) ?? null}
               leaderPoints={leader?.hypePoints ?? 0}
               onHype={setHypeTarget}
-              onToggleLike={handleToggleLike}
             />
           ))}
         </ol>
@@ -88,8 +80,13 @@ function NewOpinionsPage() {
 
       <SiteFooter />
 
-      <PostDialog isOpen={isPostOpen} onClose={() => setIsPostOpen(false)} />
-      <HypeDialog opinion={hypeTarget} leader={leader} onClose={() => setHypeTarget(null)} />
+      <PostDialog isOpen={isPostOpen} onClose={() => setIsPostOpen(false)} onPublished={reload} />
+      <HypeDialog
+        opinion={hypeTarget}
+        leader={leader}
+        onClose={() => setHypeTarget(null)}
+        onHyped={reload}
+      />
     </div>
   );
 }
